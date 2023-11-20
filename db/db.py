@@ -20,7 +20,6 @@ class WiliDB:
 
     def __del__(self):
         self._con.close()
-        super().__del__()
 
 
     def _create_tables(self):
@@ -95,7 +94,9 @@ class WiliDB:
         self._cur.execute("INSERT INTO area(name) VALUES ('%s')" % area.name)
         self._con.commit()
 
-        self._cur.execute("SELECT id WHERE name='%s'" % area.name)
+        self._cur.execute(
+            "SELECT id FROM area WHERE name='%s'" % area.name
+        )
         area_id = self._cur.fetchone()[0]
 
         # INSERT INTO motion
@@ -105,9 +106,9 @@ class WiliDB:
         # INSERT INTO init_prob
         values = []
         for i in range(area.motion_num):
-            values.append("(%d,%d,%f)" % (area_id, i, area.init_prob[i]))
+            values.append("(%d,%d,%f)" % (area_id, i+1, area.init_prob[i]))
         self._cur.execute(
-            "INSERT INTO tr_prob(area, motion, data) VALUES "
+            "INSERT INTO init_prob(area, motion, data) VALUES "
             + ",".join(values)
         )
 
@@ -115,7 +116,7 @@ class WiliDB:
         values = []
         for i in range(area.motion_num):
             for j in range(area.motion_num):
-                values.append("(%d,%d,%d,%f)" % (area_id, i, j, area.tr_prob[i,j]))
+                values.append("(%d,%d,%d,%f)" % (area_id, i+1, j+1, area.tr_prob[i,j]))
         self._cur.execute(
             "INSERT INTO tr_prob(area, from_motion, to_motion, data) VALUES "
             + ",".join(values)
@@ -128,7 +129,7 @@ class WiliDB:
         for i in range(area.motion_num):
             values.append(
                 "(%d,%d,%f,%f,%f,%f,%f)" % (
-                    area_id, i,
+                    area_id, i+1,
                     avrs[i,0], avrs[i,1], covars[i,0], covars[i,1], covars[i,2]
                 )
             )
@@ -168,6 +169,27 @@ class WiliDB:
     def get_motion_num(self, area_id:int) -> int:
         self._cur.execute("SELECT COUNT(id) FROM motion WHERE area=%d" % area_id)
         return self._cur.fetchone()[0]
+
+
+    def get_init_prob_one(self, area_id:int, motion_id:int) -> float:
+        self._cur.execute(
+            "SELECT data" \
+            " FROM init_prob" \
+            " WHERE are=%d AND motion=%d"
+            % (area_id, motion_id)
+        )
+        return self._cur.fetchall()[0][0]
+    
+
+    def get_init_prob_all(self, area_id:int) -> ndarray:
+        self._cur.execute(
+            "SELECT data" \
+            " FROM init_prob" \
+            " WHERE area=%d" \
+            " ORDER BY motion"
+            % area_id
+        )
+        return np.array(self._cur.fetchall(), dtype="float32").flatten()
 
 
     def get_tr_prob_one(self, area_id:int, from_motion_id:int, to_motion_id: int) -> float:

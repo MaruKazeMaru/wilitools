@@ -42,7 +42,7 @@ def area_to_json(json_path:str, area:Area):
             'covar': area.gaussian.covars[i].tolist(),
         })
 
-    with open(json_path) as f:
+    with open(json_path, mode='w') as f:
         json.dump(data, f)
 
     return
