@@ -1,0 +1,1 @@
+class UnexistRecord(Exception): pass
