@@ -1,9 +1,0 @@
-[project]
-name = "wilitools"
-version = "0.0"
-description = "utility tools for WiLI"
-readme = {file = "README.md", content-type = "text/markdown"}
-license = {file = "LICENSE"}
-authors = [
-    {name = "ShinagawaKazemaru", email = "marukazemaru0@gmail.com"}
-]
