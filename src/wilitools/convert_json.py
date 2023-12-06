@@ -2,7 +2,7 @@ import json
 
 import numpy as np
 
-from mathf.gaussian import Gaussian
+from .gaussian import Gaussian
 from .area import Area
 
 

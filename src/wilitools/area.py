@@ -1,5 +1,5 @@
 from numpy import ndarray
-from mathf.gaussian import Gaussian
+from .gaussian import Gaussian
 
 class Area:
     def __init__(self, name:str, init_prob:ndarray, tr_prob:ndarray, gaussian:Gaussian):

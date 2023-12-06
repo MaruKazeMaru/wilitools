@@ -5,8 +5,8 @@ import sqlite3
 import numpy as np
 from numpy import ndarray
 
-from area import Area
-from mathf.gaussian import Gaussian
+from .area import Area
+from .gaussian import Gaussian
 from .exceptions import UnexistRecord
 
 class WiliDB:

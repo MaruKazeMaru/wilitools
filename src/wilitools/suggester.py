@@ -1,8 +1,7 @@
-
 import numpy as np
 from numpy import ndarray
 
-from mathf.gaussian import Gaussian
+from .gaussian import Gaussian
 
 
 class Suggester:
