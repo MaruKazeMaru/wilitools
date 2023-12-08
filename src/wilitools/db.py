@@ -12,6 +12,9 @@ from .exceptions import UnexistRecord
 class WiliDB:
     def __init__(self, db_path:str):
         already_exist = os.path.exists(db_path)
+        if not already_exist:
+            f = open(db_path, 'wb')
+            f.close()
         self._con = sqlite3.connect(db_path)
         self._cur = self._con.cursor()
         if not already_exist:
@@ -29,7 +32,9 @@ class WiliDB:
             "CREATE TABLE area(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
             "name TEXT," \
-            "UNIQUE(name)"
+            "xmin REAL,xmax REAL," \
+            "ymin REAL,ymax REAL," \
+            "UNIQUE(name)" \
             ")"
         )
         self._cur.execute(
@@ -46,7 +51,7 @@ class WiliDB:
             "motion INTEGER," \
             "data REAL," \
             "FOREIGN KEY(motion) REFERENCES motion(id)," \
-            "UNIQUE(motion)"
+            "UNIQUE(motion)" \
             ")"
         )
         self._cur.execute(
@@ -57,7 +62,7 @@ class WiliDB:
             "data REAL," \
             "FOREIGN KEY(from_motion) REFERENCES motion(id)," \
             "FOREIGN KEY(to_motion) REFERENCES motion(id)," \
-            "UNIQUE(from_motion, to_motion)"
+            "UNIQUE(from_motion, to_motion)" \
             ")"
         )
         self._cur.execute(
@@ -70,15 +75,15 @@ class WiliDB:
             "covar_xy REAL," \
             "covar_yy REAL," \
             "FOREIGN KEY(motion) REFERENCES motion(id)," \
-            "UNIQUE(motion)"
+            "UNIQUE(motion)" \
             ")"
         )
         self._cur.execute(
             "CREATE TABLE history(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
             "area INTEGER," \
-            "time DATETIME,"
-            "comment TEXT,"
+            "time DATETIME," \
+            "comment TEXT," \
             "FOREIGN KEY(area) REFERENCES area(id)" \
             ")"
         )
@@ -86,7 +91,11 @@ class WiliDB:
 
 
     def initialize_area(self, area:Area):
-        self._cur.execute("INSERT INTO area(name) VALUES ('%s')" % area.name)
+        self._cur.execute(
+            "INSERT INTO area(name, xmin, ymin, xmax, ymax)" \
+            " VALUES ('%s',%f,%f,%f,%f)" \
+            % (area.name, area.floorsize[0], area.floorsize[1], area.floorsize[2], area.floorsize[3])
+        )
         self._con.commit()
 
         aid = self.get_area_id(area.name)
@@ -152,7 +161,7 @@ class WiliDB:
         return self._cur.fetchone()[0] + datetime.timedelta(hours=hour_diff_from_utc)
 
 
-    def get_area_id(self, name:str) -> Area:
+    def get_area_id(self, name:str) -> int:
         self._cur.execute("SELECT id FROM area WHERE name='%s'" % name)
         result = self._cur.fetchall()
         if len(result) == 0:
@@ -160,17 +169,28 @@ class WiliDB:
         return result[0][0]
 
 
+    def check_record_exist(self, table:str, id:int) -> bool:
+        self._cur.execute("SELECT id FROM %s WHERE id=%d" % (table, id))
+        return not self._cur.fetchone() is None
+
+
     def get_motion_num(self, area_id:int) -> int:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         self._cur.execute("SELECT COUNT(id) FROM motion WHERE area=%d" % area_id)
         return self._cur.fetchone()[0]
 
 
     def get_motion_ids(self, area_id:int) ->list[int]:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         self._cur.execute("SELECT id FROM motion WHERE area=%d" % area_id)
         return [record[0] for record in self._cur.fetchall()]
 
 
     def get_init_prob_one(self, motion_id:int) -> float:
+        if not self.check_record_exist("motion", motion_id):
+            raise UnexistRecord(table="motion", columns=["id"], values=[motion_id])
         self._cur.execute(
             "SELECT data" \
             " FROM init_prob" \
@@ -181,6 +201,8 @@ class WiliDB:
     
 
     def get_init_prob_all(self, area_id:int) -> ndarray:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         self._cur.execute(
             "SELECT data" \
             " FROM init_prob" \
@@ -193,6 +215,10 @@ class WiliDB:
 
 
     def get_tr_prob_one(self, from_motion_id:int, to_motion_id: int) -> float:
+        if not self.check_record_exist("motion", from_motion_id):
+            raise UnexistRecord(table="motion", columns=["id"], values=[from_motion_id])
+        if not self.check_record_exist("motion", to_motion_id):
+            raise UnexistRecord(table="motion", columns=["id"], values=[to_motion_id])
         self._cur.execute(
             "SELECT data" \
             " FROM tr_prob" \
@@ -203,6 +229,8 @@ class WiliDB:
 
 
     def get_tr_prob_vec(self, from_motion_id:int) -> ndarray:
+        if not self.check_record_exist("motion", from_motion_id):
+            raise UnexistRecord(table="motion", columns=["id"], values=[from_motion_id])
         self._cur.execute(
             "SELECT data" \
             " FROM tr_prob" \
@@ -214,6 +242,8 @@ class WiliDB:
 
 
     def get_tr_prob_mat(self, area_id:int) -> ndarray:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         n = self.get_motion_num(area_id)
         self._cur.execute(
             "SELECT data" \
@@ -227,6 +257,8 @@ class WiliDB:
 
 
     def get_gaussian_one(self, motion_id:int) -> tuple[ndarray, ndarray]:
+        if not self.check_record_exist("motion", motion_id):
+            raise UnexistRecord(table="motion", columns=["id"], values=[motion_id])
         self._cur.execute(
             "SELECT avr_x, avr_y, covar_xx, covar_xy, covar_yy" \
             " FROM gaussian" \
@@ -240,6 +272,8 @@ class WiliDB:
 
 
     def get_gaussian_all(self, area_id:int) -> Gaussian:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         self._cur.execute(
             "SELECT avr_x, avr_y, covar_xx, covar_xy, covar_yy" \
             " FROM gaussian" \
@@ -255,6 +289,8 @@ class WiliDB:
 
 
     def set_init_prob(self, area_id:int, init_prob:ndarray):
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         motion_ids = self.get_motion_ids(area_id)
         for i, mid in enumerate(motion_ids):
             self._cur.execute(
@@ -266,6 +302,8 @@ class WiliDB:
 
 
     def set_tr_prob(self, area_id:int, tr_prob:ndarray):
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         motion_ids = self.get_motion_ids(area_id)
         for i1, mid1 in enumerate(motion_ids):
             for i2, mid2 in enumerate(motion_ids):
@@ -278,6 +316,8 @@ class WiliDB:
 
 
     def set_gaussian(self, area_id:int, gaussian:Gaussian):
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         motion_ids = self.get_motion_ids(area_id)
         for i, mid in enumerate(motion_ids):
             self._cur.execute(
