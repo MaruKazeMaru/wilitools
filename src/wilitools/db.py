@@ -28,6 +28,8 @@ class WiliDB:
     def _create_tables(self):
         # CREATE TABLES
         self._cur.execute("PRAGMA foreign_keys=true")
+
+        # meta
         self._cur.execute(
             "CREATE TABLE area(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
@@ -38,6 +40,16 @@ class WiliDB:
             ")"
         )
         self._cur.execute(
+            "CREATE TABLE history(" \
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," \
+            "area INTEGER," \
+            "time DATETIME," \
+            "comment TEXT," \
+            "FOREIGN KEY(area) REFERENCES area(id)" \
+            ")"
+        )
+
+        self._cur.execute(
             "CREATE TABLE motion(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
             "name TEXT," \
@@ -45,6 +57,8 @@ class WiliDB:
             "FOREIGN KEY(area) REFERENCES area(id)" \
             ")"
         )
+
+        # hmm parameters
         self._cur.execute(
             "CREATE TABLE init_prob(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
@@ -78,23 +92,44 @@ class WiliDB:
             "UNIQUE(motion)" \
             ")"
         )
+
+        # transition failure prob
         self._cur.execute(
-            "CREATE TABLE history(" \
+            "CREATE TABLE sample(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
             "area INTEGER," \
-            "time DATETIME," \
-            "comment TEXT," \
             "FOREIGN KEY(area) REFERENCES area(id)" \
             ")"
         )
+        self._cur.execute(
+            "CREATE TABLE sample_elem(" \
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," \
+            "sample INTEGER," \
+            "motion INTEGER," \
+            "data REAL," \
+            "FOREIGN KEY(sample) REFERENCES sample(id)," \
+            "FOREIGN KEY(motion) REFERENCES motion(id)," \
+            "UNIQUE(sample,motion)" \
+            ")"
+        )
+        self._cur.execute(
+            "CREATE TABLE dens_sample(" \
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," \
+            "sample INTEGER," \
+            "data REAL," \
+            "FOREIGN KEY(sample) REFERENCES sample(id)," \
+            "UNIQUE(sample)" \
+            ")"
+        )
+
         self._con.commit()
 
 
-    def initialize_area(self, area:Area):
+    def insert_area(self, area:Area):
         self._cur.execute(
-            "INSERT INTO area(name, xmin, ymin, xmax, ymax)" \
+            "INSERT INTO area(name, xmin, xmax, ymin, ymax)" \
             " VALUES ('%s',%f,%f,%f,%f)" \
-            % (area.name, area.floorsize[0], area.floorsize[1], area.floorsize[2], area.floorsize[3])
+            % (area.name, area.floor.xmin, area.floor.xmax, area.floor.ymin, area.floor.ymax)
         )
         self._con.commit()
 
@@ -103,8 +138,17 @@ class WiliDB:
         # INSERT INTO motion
         values = ["(%d)" % aid] * area.motion_num
         self._cur.execute("INSERT INTO motion(area) VALUES " + ",".join(values))
-
+        self._con.commit()
         motion_ids = self.get_motion_ids(aid)
+
+        # INSERT INTO sample
+        values = ["(%d)" % aid] * area.sample_size
+        self._cur.execute(
+            "INSERT INTO sample(area) VALUES"
+            + ",".join(values)
+        )
+        self._con.commit()
+        sample_ids = self.get_sample_ids(aid)
 
         # INSERT INTO init_prob
         values = []
@@ -142,13 +186,37 @@ class WiliDB:
             ") VALUES "
             + ",".join(values)
         )
+
+        # INSERT INTO sample_elem
+        values = []
+        for i1, sid in enumerate(sample_ids):
+            for i2, mid in enumerate(motion_ids):
+                values.append(
+                    "(%d,%d,%f)" % (sid, mid, area.sample[i1,i2])
+                )
+        self._cur.execute(
+            "INSERT INTO sample_elem(sample, motion, data) VALUES "
+            + ",".join(values)
+        )
+
+        # INSERT INTO dens_sample
+        values = []
+        for i, sid in enumerate(sample_ids):
+            values.append(
+                "(%d,%d,%f)" % (sid, area.dens_sample[i])
+            )
+        self._cur.execute(
+            "INSERT INTO dens_sample(sample, data) VALUES "
+            + ",".join(values)
+        )
+
         self._con.commit()
 
         # INSERT INTO history
-        self.set_history(aid, "init")
+        self.insert_history(aid, "init")
 
 
-    def set_history(self, area_id:int, comment:str):
+    def insert_history(self, area_id:int, comment:str):
         self._cur.execute(
             "INSERT INTO history(area, time, comment) VALUES (%d,datetime('now'),'%s')"
             % (area_id , comment)
@@ -185,7 +253,14 @@ class WiliDB:
         if not self.check_record_exist("area", area_id):
             raise UnexistRecord(table="area", columns=["id"], values=[area_id])
         self._cur.execute("SELECT id FROM motion WHERE area=%d" % area_id)
-        return [record[0] for record in self._cur.fetchall()]
+        return [record[0] for record in self._cur.fetchall()].sort()
+
+
+    def get_sample_ids(self, area_id:int) -> list[int]:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
+        self._cur.execute("SELECT id FROM sample WHERE area=%d" % area_id)
+        return [record[0] for record in self._cur.fetchall()].sort()
 
 
     def get_init_prob_one(self, motion_id:int) -> float:

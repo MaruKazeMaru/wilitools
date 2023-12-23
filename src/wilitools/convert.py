@@ -4,6 +4,7 @@ import numpy as np
 
 from .gaussian import Gaussian
 from .area import Area
+from .suggester import Suggester
 
 
 def json_to_area(json_path:str) -> Area:
@@ -46,3 +47,11 @@ def area_to_json(json_path:str, area:Area):
         json.dump(data, f)
 
     return
+
+
+def area_to_suggester(area:Area) -> Suggester:
+    return Suggester(
+        area.init_prob, area.tr_prob,
+        area.gaussian.avrs, area.gaussian.covars,
+        area.sample, area.dens_sample
+    )
