@@ -6,8 +6,9 @@ import numpy as np
 from numpy import ndarray
 
 from .area import Area
-from .gaussian import Gaussian
 from .exceptions import UnexistRecord
+from .floor import Floor
+from .gaussian import Gaussian
 
 class WiliDB:
     def __init__(self, db_path:str):
@@ -125,7 +126,7 @@ class WiliDB:
         self._con.commit()
 
 
-    def insert_area(self, area:Area):
+    def insert_area(self, area:Area) -> int:
         self._cur.execute(
             "INSERT INTO area(name, xmin, xmax, ymin, ymax)" \
             " VALUES ('%s',%f,%f,%f,%f)" \
@@ -203,7 +204,7 @@ class WiliDB:
         values = []
         for i, sid in enumerate(sample_ids):
             values.append(
-                "(%d,%d,%f)" % (sid, area.dens_sample[i])
+                "(%d,%f)" % (sid, area.dens_sample[i])
             )
         self._cur.execute(
             "INSERT INTO dens_sample(sample, data) VALUES "
@@ -214,6 +215,8 @@ class WiliDB:
 
         # INSERT INTO history
         self.insert_history(aid, "init")
+
+        return aid
 
 
     def insert_history(self, area_id:int, comment:str):
@@ -237,6 +240,15 @@ class WiliDB:
         return result[0][0]
 
 
+    def get_area_meta(self, area_id:int) -> tuple[str, Floor]:
+        self._cur.execute(
+            "SELECT name, xmin, xmax, ymin, ymax FROM area WHERE id={}"\
+            .format(area_id)
+        )
+        result = self._cur.fetchone()
+        return result[0], Floor(result[1], result[2], result[3], result[4])
+
+
     def check_record_exist(self, table:str, id:int) -> bool:
         self._cur.execute("SELECT id FROM %s WHERE id=%d" % (table, id))
         return not self._cur.fetchone() is None
@@ -252,15 +264,25 @@ class WiliDB:
     def get_motion_ids(self, area_id:int) ->list[int]:
         if not self.check_record_exist("area", area_id):
             raise UnexistRecord(table="area", columns=["id"], values=[area_id])
-        self._cur.execute("SELECT id FROM motion WHERE area=%d" % area_id)
-        return [record[0] for record in self._cur.fetchall()].sort()
+        self._cur.execute(
+            "SELECT id FROM motion " \
+            "WHERE area={} " \
+            "ORDER BY id"\
+            .format(area_id)
+        )
+        return [record[0] for record in self._cur.fetchall()]
 
 
     def get_sample_ids(self, area_id:int) -> list[int]:
         if not self.check_record_exist("area", area_id):
             raise UnexistRecord(table="area", columns=["id"], values=[area_id])
-        self._cur.execute("SELECT id FROM sample WHERE area=%d" % area_id)
-        return [record[0] for record in self._cur.fetchall()].sort()
+        self._cur.execute(
+            "SELECT id FROM sample " \
+            "WHERE area={} " \
+            "ORDER BY id"\
+            .format(area_id)
+        )
+        return [record[0] for record in self._cur.fetchall()]
 
 
     def get_init_prob_one(self, motion_id:int) -> float:
@@ -269,8 +291,8 @@ class WiliDB:
         self._cur.execute(
             "SELECT data" \
             " FROM init_prob" \
-            " WHERE motion=%d"
-            % (motion_id)
+            " WHERE motion={}"\
+            .format(motion_id)
         )
         return self._cur.fetchall()[0][0]
     
@@ -282,9 +304,9 @@ class WiliDB:
             "SELECT data" \
             " FROM init_prob" \
             " LEFT OUTER JOIN motion ON init_prob.motion=motion.id" \
-            " WHERE area=%d" \
-            " ORDER BY motion"
-            % area_id
+            " WHERE area={}" \
+            " ORDER BY motion"\
+            .format(area_id)
         )
         return np.array(self._cur.fetchall(), dtype="float32").flatten()
 
@@ -297,8 +319,8 @@ class WiliDB:
         self._cur.execute(
             "SELECT data" \
             " FROM tr_prob" \
-            " WHERE from_motion=%d AND to_motion=%d"
-            % (from_motion_id, to_motion_id)
+            " WHERE from_motion={} AND to_motion={}"\
+            .format(from_motion_id, to_motion_id)
         )
         return self._cur.fetchall()[0][0]
 
