@@ -51,16 +51,16 @@ class Suggester:
 
 
     def expectation(self, f, f_kwargs:dict={}) -> float | ndarray:
-        sum_f = self.dens_sample[0] * f(self.sample[:, 0])
-        for i in range(1, self.sample_num):
-            sum_f += self.dens_sample[i] * f(self.sample[:, i])
+        sum_f = 0.0
+        for i in range(self.sample_num):
+            sum_f += self.dens_sample[i] * f(self.sample[i,:])
         return sum_f / self.sample_num
 
 
     def update(self, where_found:ndarray) -> None:
         exp_l = self.gaussian.weighted(where_found, self.expectation(self.weight))
         for i in range(self.sample_num):
-            self.dens_sample[i] = self.liklyhood(self.sample[:,i], x=where_found) * self.dens_sample[i]
+            self.dens_sample[i] = self.liklyhood(self.sample[i,:], x=where_found) * self.dens_sample[i]
         self.dens_sample /= exp_l
 
 

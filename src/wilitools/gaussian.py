@@ -5,6 +5,8 @@ class Gaussian:
     def __init__(self, avrs:ndarray, covars:ndarray):
         self.avrs = avrs
         self.covars = covars
+
+        # cache
         self._dets:ndarray = None
         self._divs:ndarray = None
 
@@ -23,10 +25,11 @@ class Gaussian:
             self._dets = self.covars[:,0] * self.covars[:,2] - self.covars[:,1] * self.covars[:,1]
             self._divs = 2.0 * np.pi * self._dets
 
-        if len(x.shape) == 1:
-            x_num = 1
-        else:
-            x_num = x.shape[0]
+        x_num = 1
+        shape = [n for n in x.shape]
+        for n in shape[:-1]:
+            x_num *= n
+
         motion_num = self.avrs.shape[0]
 
         x_ = x.reshape((x_num, 1, 2)) - self.avrs.reshape((1, motion_num, 2))
@@ -41,7 +44,6 @@ class Gaussian:
 
         ret = es @ weight # shape = (x_num,)
 
-        if len(x.shape) == 1:
-            ret = ret[0]
+        ret = ret.reshape(shape[:-1])
 
         return ret

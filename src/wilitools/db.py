@@ -98,6 +98,7 @@ class WiliDB:
         self._cur.execute(
             "CREATE TABLE sample(" \
             "id INTEGER PRIMARY KEY AUTOINCREMENT," \
+            "dens REAL," \
             "area INTEGER," \
             "FOREIGN KEY(area) REFERENCES area(id)" \
             ")"
@@ -111,15 +112,6 @@ class WiliDB:
             "FOREIGN KEY(sample) REFERENCES sample(id)," \
             "FOREIGN KEY(motion) REFERENCES motion(id)," \
             "UNIQUE(sample,motion)" \
-            ")"
-        )
-        self._cur.execute(
-            "CREATE TABLE dens_sample(" \
-            "id INTEGER PRIMARY KEY AUTOINCREMENT," \
-            "sample INTEGER," \
-            "data REAL," \
-            "FOREIGN KEY(sample) REFERENCES sample(id)," \
-            "UNIQUE(sample)" \
             ")"
         )
 
@@ -143,9 +135,11 @@ class WiliDB:
         motion_ids = self.get_motion_ids(aid)
 
         # INSERT INTO sample
-        values = ["(%d)" % aid] * area.sample_size
+        values = []
+        for d in area.dens_sample.tolist():
+            values.append("({},{})".format(d, aid))
         self._cur.execute(
-            "INSERT INTO sample(area) VALUES"
+            "INSERT INTO sample(dens, area) VALUES"
             + ",".join(values)
         )
         self._con.commit()
@@ -197,17 +191,6 @@ class WiliDB:
                 )
         self._cur.execute(
             "INSERT INTO sample_elem(sample, motion, data) VALUES "
-            + ",".join(values)
-        )
-
-        # INSERT INTO dens_sample
-        values = []
-        for i, sid in enumerate(sample_ids):
-            values.append(
-                "(%d,%f)" % (sid, area.dens_sample[i])
-            )
-        self._cur.execute(
-            "INSERT INTO dens_sample(sample, data) VALUES "
             + ",".join(values)
         )
 
@@ -383,6 +366,40 @@ class WiliDB:
         avrs = result[:, [0, 1]]
         covars = result[:,[2, 3, 4]]
         return Gaussian(avrs, covars)
+
+
+    def get_samples(self, area_id:int) -> ndarray:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
+        self._cur.execute(
+            "SELECT se.data" \
+            " FROM sample_elem AS se" \
+            " LEFT OUTER JOIN sample AS s ON se.sample=s.id" \
+            " WHERE s.area={}" \
+            " ORDER BY se.sample, se.motion"
+            .format(area_id)
+        )
+        result = self._cur.fetchall()
+        motion_num = self.get_motion_num(area_id)
+        sample_num = int(len(result) / motion_num)
+        samples = np.array(result, dtype=np.float32).reshape((sample_num, motion_num))
+        return samples
+
+
+    def get_dens_samples(self, area_id:int) -> ndarray:
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
+        self._cur.execute(
+            "SELECT dens" \
+            " FROM sample" \
+            " WHERE area={}" \
+            " ORDER BY id"
+            .format(area_id)
+        )
+        result = self._cur.fetchall()
+        sample_num = len(result)
+        dens_samples = np.array(result, dtype=np.float32).reshape((sample_num,))
+        return dens_samples
 
 
     def set_init_prob(self, area_id:int, init_prob:ndarray):
