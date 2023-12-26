@@ -26,8 +26,9 @@ class Gaussian:
             self._divs = 2.0 * np.pi * self._dets
 
         x_num = 1
-        shape = [n for n in x.shape]
-        for n in shape[:-1]:
+        x_shape = [n for n in x.shape]
+        x_shape = x_shape[:-1]
+        for n in x_shape:
             x_num *= n
 
         motion_num = self.avrs.shape[0]
@@ -44,6 +45,9 @@ class Gaussian:
 
         ret = es @ weight # shape = (x_num,)
 
-        ret = ret.reshape(shape[:-1])
+        if len(x_shape) == 0:
+            ret = ret[0]
+        else:
+            ret = ret.reshape(x_shape)
 
         return ret

@@ -444,3 +444,108 @@ class WiliDB:
                     mid
                 )
             )
+
+
+    def reinit_area(self, area_id:int, area:Area):
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
+        motion_ids = self.get_motion_ids(area_id)
+
+        # DELETE
+        self._cur.execute(
+            "DELETE FROM init_prob WHERE motion IN " \
+            "(SELECT id FROM motion WHERE area={})".format(area_id)
+        )
+        self._cur.execute(
+            "DELETE FROM tr_prob WHERE to_motion IN " \
+            "(SELECT id FROM motion WHERE area={})".format(area_id)
+        )
+        self._cur.execute(
+            "DELETE FROM gaussian WHERE motion IN " \
+            "(SELECT id FROM motion WHERE area={})".format(area_id)
+        )
+        self._cur.execute(
+            "DELETE FROM sample_elem WHERE motion IN " \
+            "(SELECT id FROM motion WHERE area={})".format(area_id)
+        )
+        self._cur.execute("DELETE FROM sample WHERE area={}".format(area_id))
+        self._cur.execute("DELETE FROM motion WHERE area={}".format(area_id))
+
+        # UPDATE area
+        f = area.floor
+        self._cur.execute(
+            "UPDATE area SET name='{}',xmin={},xmax={},ymin={},ymax={} WHERE id={}"\
+            .format(area.name, f.xmin, f.xmax, f.ymin, f.ymax, area_id)
+        )
+
+        # INSERT INTO motion
+        values = ["(%d)" % area_id] * area.motion_num
+        self._cur.execute("INSERT INTO motion(area) VALUES " + ",".join(values))
+        self._con.commit()
+        motion_ids = self.get_motion_ids(area_id)
+
+        # INSERT INTO sample
+        values = []
+        for d in area.dens_sample.tolist():
+            values.append("({},{})".format(d, area_id))
+        self._cur.execute(
+            "INSERT INTO sample(dens, area) VALUES"
+            + ",".join(values)
+        )
+        self._con.commit()
+        sample_ids = self.get_sample_ids(area_id)
+
+        # INSERT INTO init_prob
+        values = []
+        for i, mid in enumerate(motion_ids):
+            values.append("(%d,%f)" % (mid, area.init_prob[i]))
+        self._cur.execute(
+            "INSERT INTO init_prob(motion, data) VALUES "
+            + ",".join(values)
+        )
+
+        # INSERT INTO tr_prob
+        values = []
+        for i1, mid1 in enumerate(motion_ids):
+            for i2, mid2 in enumerate(motion_ids):
+                values.append("(%d,%d,%f)" % (mid1, mid2, area.tr_prob[i1,i2]))
+        self._cur.execute(
+            "INSERT INTO tr_prob(from_motion, to_motion, data) VALUES "
+            + ",".join(values)
+        )
+
+        # INSERT INTO gaussian
+        values = []
+        avrs = area.gaussian.avrs
+        covars = area.gaussian.covars
+        for i, mid in enumerate(motion_ids):
+            values.append(
+                "(%d,%f,%f,%f,%f,%f)" % (
+                    mid,
+                    avrs[i,0], avrs[i,1], covars[i,0], covars[i,1], covars[i,2]
+                )
+            )
+        self._cur.execute(
+            "INSERT INTO gaussian(" \
+            "motion, avr_x, avr_y, covar_xx, covar_xy, covar_yy" \
+            ") VALUES "
+            + ",".join(values)
+        )
+
+        # INSERT INTO sample_elem
+        values = []
+        for i1, sid in enumerate(sample_ids):
+            for i2, mid in enumerate(motion_ids):
+                values.append(
+                    "(%d,%d,%f)" % (sid, mid, area.sample[i1,i2])
+                )
+        self._cur.execute(
+            "INSERT INTO sample_elem(sample, motion, data) VALUES "
+            + ",".join(values)
+        )
+
+        self._con.commit()
+
+        # INSERT INTO history
+        self.insert_history(area_id, "reinit")
+

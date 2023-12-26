@@ -2,32 +2,43 @@ import json
 
 import numpy as np
 
-from .gaussian import Gaussian
 from .area import Area
+from .floor import Floor
+from .gaussian import Gaussian
+from .rand import uniform_cube
 from .suggester import Suggester
+
+
+def dict_to_area(data:dict) -> Area:
+    name = data['name']
+    floor = Floor(
+        float(data['xmin']), float(data['xmax']),
+        float(data['ymin']), float(data['ymax'])
+    )
+
+    motion_num = int(data['motion_num'])
+    sample_num = int(data['sample_num'])
+
+    init_prob = np.array(data['init_prob'], dtype=np.float32).reshape(motion_num)
+    tr_prob = np.array(data['tr_prob'], dtype=np.float32).reshape(motion_num, motion_num)
+    avrs = np.array(data['avrs'], dtype=np.float32).reshape(motion_num, 2)
+    covars = np.array(data['covars'], dtype=np.float32).reshape(motion_num, 3)
+    gaussian = Gaussian(avrs, covars)
+
+    samples = uniform_cube(motion_num, sample_num)
+    dens_samples = np.ones(sample_num, dtype=np.float32)
+
+    return Area(
+        name, floor,
+        init_prob, tr_prob, gaussian,
+        samples, dens_samples
+    )
 
 
 def json_to_area(json_path:str) -> Area:
     with open(json_path) as f:
         data = json.load(f)
-        try:
-            name = data['name']
-        except IndexError:
-            name = None
-        init_prob = np.array(data['init_prob'], dtype='float32')
-        tr_prob = np.array(data['tr_prob'], dtype='float32')
-        avrs = []
-        covars = []
-        for g in data['gaussian']:
-            avrs.append(g['avr'])
-            covars.append(g['covar'])
-        gaussian = Gaussian(
-            np.array(avrs, dtype='float32'),
-            np.array(covars, dtype='float32')
-        )
-        area = Area(name, init_prob, tr_prob, gaussian)
-    
-    return area
+    return dict_to_area(data)
 
 
 def area_to_json(json_path:str, area:Area):
