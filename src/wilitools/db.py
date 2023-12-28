@@ -413,6 +413,7 @@ class WiliDB:
                 " WHERE motion=%d"
                 % (init_prob[i], mid)
             )
+        self._con.commit()
 
 
     def set_tr_prob(self, area_id:int, tr_prob:ndarray):
@@ -427,6 +428,7 @@ class WiliDB:
                     " WHERE from_motion=%d AND to_motion=%d"
                     % (tr_prob[i1, i1], mid1, mid2)
                 )
+        self._con.commit()
 
 
     def set_gaussian(self, area_id:int, gaussian:Gaussian):
@@ -444,6 +446,19 @@ class WiliDB:
                     mid
                 )
             )
+        self._con.commit()
+
+
+    def set_dens_samples(self, area_id:int, dens_samples:ndarray):
+        if not self.check_record_exist("area", area_id):
+            raise UnexistRecord(table="area", columns=["id"], values=[area_id])
+        sample_ids = self.get_sample_ids(area_id)
+        for i, sid in enumerate(sample_ids):
+            self._cur.execute(
+                "UPDATE sample SET dens={} WHERE id={}"\
+                .format(dens_samples[i], sid)
+            )
+        self._con.commit()
 
 
     def reinit_area(self, area_id:int, area:Area):
