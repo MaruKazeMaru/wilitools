@@ -1,4 +1,8 @@
-from setuptools import setup, find_packages
+import os
+import subprocess
+from setuptools import setup, find_packages, installer
+
+subprocess.run(['make'], cwd=os.path.dirname(__file__))
 
 setup(
     name='wilitools',
@@ -16,5 +20,6 @@ setup(
     install_requires=['numpy'],
     python_requires='>=3',
     packages=find_packages(where='pysrc'),
-    package_dir={'': 'pysrc'}
+    package_dir={'': 'pysrc'},
+    include_package_data=True
 )
