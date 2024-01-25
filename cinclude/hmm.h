@@ -2,7 +2,8 @@
 #define __WILI_HMM_H__
 
 typedef struct{
-    unsigned long motion_num;
+    unsigned char motion_num;
+    double* init_prob;
     double** tr_prob;
     double** avrs;
     double** covars;
@@ -11,6 +12,6 @@ typedef struct{
 hmm_t* construct_hmm(unsigned char motion_num, double* init_prob, double** tr_prob, double** avrs, double** covars);
 void destroy_hmm(hmm_t* hmm_ptr);
 
-void baum_welch(hmm_t* param_ptr, double** observation);
+void baum_welch(hmm_t* param_ptr, unsigned int observation_len, double** observation);
 
 #endif

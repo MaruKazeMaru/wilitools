@@ -7,24 +7,27 @@
 hmm_t* construct_hmm(unsigned char motion_num, double* init_prob, double** tr_prob, double** avrs, double** covars){
     hmm_t* hmm = (hmm_t*)malloc(sizeof(hmm_t));
 
-    unsigned long n = motion_num;
+    unsigned char n = motion_num;
     hmm->motion_num = n;
 
-    hmm->tr_prob = (double**)malloc(n * sizeof(double*));
-    hmm->avrs    = (double**)malloc(n * sizeof(double*));
-    hmm->covars  = (double**)malloc(n * sizeof(double*));
+    hmm->init_prob = (double*)malloc(n * sizeof(double));
+    hmm->tr_prob   = (double**)malloc(n * sizeof(double*));
+    hmm->avrs      = (double**)malloc(n * sizeof(double*));
+    hmm->covars    = (double**)malloc(n * sizeof(double*));
 
-    for(unsigned long i = 0; i < n; ++i){
+    for(unsigned char i = 0; i < n; ++i){
+        hmm->init_prob[i] = init_prob[i];
+
         hmm->tr_prob[i] = (double*)malloc(n * sizeof(double));
         hmm->avrs[i]    = (double*)malloc(2 * sizeof(double));
         hmm->covars[i]  = (double*)malloc(3 * sizeof(double));
 
-        for(unsigned long j = 0; j < n; ++j)
-            hmm->tr_prob[i][j] = tr_prob[i*n + j];
+        for(unsigned char j = 0; j < n; ++j)
+            hmm->tr_prob[i][j] = tr_prob[i][j];
         for(char d = 0; d < 2; ++d)
-            hmm->avrs[i][d] = avrs[i*2+d];
+            hmm->avrs[i][d] = avrs[i][d];
         for(char d = 0; d < 3; ++d)
-            hmm->covars[i][d] = covars[i*3+d];
+            hmm->covars[i][d] = covars[i][d];
     }
 
     return hmm;
@@ -32,7 +35,7 @@ hmm_t* construct_hmm(unsigned char motion_num, double* init_prob, double** tr_pr
 
 
 void destroy_hmm(hmm_t* hmm){
-    unsigned long n = hmm->motion_num;
+    unsigned char n = hmm->motion_num;
 
     for(unsigned char i = 0; i < n; ++i){
         free(hmm->tr_prob[i]);
