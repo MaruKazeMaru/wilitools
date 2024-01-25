@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
-# SPDX-License-Identifier: MIT License
-
 import os
 import datetime
 import sqlite3

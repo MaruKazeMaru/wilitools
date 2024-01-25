@@ -1,6 +1,3 @@
-// SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
-// SPDX-License-Identifier: MIT License
-
 #ifndef __WILI_HMM_H__
 #define __WILI_HMM_H__
 
