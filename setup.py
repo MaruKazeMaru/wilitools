@@ -15,6 +15,6 @@ setup(
 
     install_requires=['numpy'],
     python_requires='>=3',
-    packages=find_packages(where='pysrc'),
-    package_dir={'': 'pysrc'}
+    packages=find_packages(where='src'),
+    package_dir={'': 'src'}
 )
