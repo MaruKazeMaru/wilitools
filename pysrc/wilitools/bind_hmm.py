@@ -14,7 +14,7 @@ class _hmm_t(c.Structure):
         ("covars", c.POINTER(c.POINTER(c.c_double)))
     ]
 
-# c.POINTER(c.POINTER(c.c_double)) を吐くように直せ
+
 def ndarray2cptr(arr:ndarray):
     arr_f = arr.flatten()
     n = arr_f.shape[0]
