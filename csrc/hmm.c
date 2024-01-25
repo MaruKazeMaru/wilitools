@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
+// SPDX-License-Identifier: MIT License
+
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>

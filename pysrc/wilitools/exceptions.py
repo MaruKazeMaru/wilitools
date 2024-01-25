@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
+# SPDX-License-Identifier: MIT License
+
 class UnexistRecord(Exception):
     def __init__(self, table:str, columns:list[str]=[], values:list=[]):
         wheres = []
