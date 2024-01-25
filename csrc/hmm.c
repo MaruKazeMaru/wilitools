@@ -7,7 +7,7 @@
 
 #include <hmm.h>
 
-hmm_t* construct_hmm(unsigned long motion_num, double* init_prob, double** tr_prob, double** avrs, double** covars){
+hmm_t* construct_hmm(unsigned char motion_num, double* init_prob, double** tr_prob, double** avrs, double** covars){
     hmm_t* hmm = (hmm_t*)malloc(sizeof(hmm_t));
 
     unsigned char n = motion_num;
@@ -41,12 +41,12 @@ void destroy_hmm(hmm_t* hmm){
     unsigned char n = hmm->motion_num;
 
     for(unsigned char i = 0; i < n; ++i){
-        free(hmm->init_prob);
         free(hmm->tr_prob[i]);
         free(hmm->avrs[i]);
         free(hmm->covars[i]);
     }
 
+    free(hmm->init_prob);
     free(hmm->tr_prob);
     free(hmm->avrs);
     free(hmm->covars);
@@ -281,30 +281,34 @@ double baum_welch_once(hmm_t* hmm, unsigned int observation_len, double** observ
 
 
 void baum_welch(hmm_t* hmm, unsigned int observation_len, double** observation){
+    hmm->init_prob[0] = 0.0;
+    hmm->tr_prob[0][0] = 0.0;
+    hmm->avrs[0][0] = 0.0;
+    hmm->covars[0][0] = 0.0;
     return;
 
-    double likilihood; // logP(o)
-    double diff_liklihood_threshold = 0.001;
-    int update_loop_max = 2;
+    // double likilihood; // logP(o)
+    // double diff_liklihood_threshold = 0.001;
+    // int update_loop_max = 2;
 
-    // init
-    likilihood = update_once(observation_len, observation);
+    // // init
+    // likilihood = update_once(observation_len, observation);
 
-    // loop update untill logP(o) converge
-    int update_cnt = 1;
-    for(; update_cnt < update_loop_max; ++update_cnt){
-        float new_likilihood = update_once(observation_len, observation);
-        if(new_likilihood - likilihood <= diff_liklihood_threshold)
-            break;
-        likilihood = new_likilihood;
-    }
-    // ***** note ***********************************************************
-    //
-    // logP(o) gets larger at every update according to Baum-Welch algorhytm.
-    // =>
-    // once logP(o; new) - logP(o; old) is enogh small, logP(o) is converged.
-    //
-    // **********************************************************************
+    // // loop update untill logP(o) converge
+    // int update_cnt = 1;
+    // for(; update_cnt < update_loop_max; ++update_cnt){
+    //     float new_likilihood = update_once(observation_len, observation);
+    //     if(new_likilihood - likilihood <= diff_liklihood_threshold)
+    //         break;
+    //     likilihood = new_likilihood;
+    // }
+    // // ***** note ***********************************************************
+    // //
+    // // logP(o) gets larger at every update according to Baum-Welch algorhytm.
+    // // =>
+    // // once logP(o; new) - logP(o; old) is enogh small, logP(o) is converged.
+    // //
+    // // **********************************************************************
 
-    return;
+    // return;
 }
