@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
-# SPDX-License-Identifier: MIT License
-
 from .gaussian import Gaussian
 from .area import Area, create_area
 from .db import WiliDB

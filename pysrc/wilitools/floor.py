@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
-# SPDX-License-Identifier: MIT License
-
 import numpy as np
 from numpy import ndarray
 
