@@ -8,10 +8,10 @@ import sqlite3
 import numpy as np
 from numpy import ndarray
 
-from .area import Area
-from .exceptions import UnexistRecord
-from .floor import Floor
-from .gaussian import Gaussian
+from ._area import Area
+from ._exceptions import UnexistRecord
+from ._floor import Floor
+from ._gaussian import Gaussian
 
 class WiliDB:
     def __init__(self, db_path:str):

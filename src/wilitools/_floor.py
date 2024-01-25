@@ -4,7 +4,7 @@
 import numpy as np
 from numpy import ndarray
 
-from .exceptions import NegativeFloor
+from ._exceptions import NegativeFloor
 
 class Floor:
     def __init__(self, xmin:float, xmax:float, ymin:float, ymax:float):

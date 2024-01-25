@@ -4,8 +4,8 @@
 import numpy as np
 from numpy import ndarray
 
-from .gaussian import Gaussian
-from .rand import uniform_cube
+from ._gaussian import Gaussian
+from ._rand import uniform_cube
 
 class Suggester:
     def __init__(self,

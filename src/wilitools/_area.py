@@ -4,9 +4,9 @@
 import numpy as np
 from numpy import ndarray
 
-from .floor import Floor
-from .gaussian import Gaussian
-from .rand import uniform_cube
+from ._floor import Floor
+from ._gaussian import Gaussian
+from ._rand import uniform_cube
 
 class Area:
     def __init__(

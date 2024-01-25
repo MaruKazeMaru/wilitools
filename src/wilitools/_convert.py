@@ -5,11 +5,11 @@ import json
 
 import numpy as np
 
-from .area import Area
-from .floor import Floor
-from .gaussian import Gaussian
-from .rand import uniform_cube
-from .suggester import Suggester
+from ._area import Area
+from ._floor import Floor
+from ._gaussian import Gaussian
+from ._rand import uniform_cube
+from ._suggester import Suggester
 
 
 def dict_to_area(data:dict) -> Area:
