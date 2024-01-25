@@ -1,17 +1,10 @@
 CC=gcc
-TARGETNAME=wilihmm
-TARGETLIB=lib$(TARGETNAME).so
+TARGETNAME=hmm
 SRCS=hmm.c
 SRCDIR=csrc
-BUILDDIR=cbuild
-OBJDIR=$(BUILDDIR)/obj
+OBJDIR=cbuild/obj
 INCDIR=cinclude
 
-TARGET=$(OBJDIR)/$(TARGETLIB)
-
-$(TARGET): $(addprefix $(SRCDIR)/, $(SRCS))
+$(OBJDIR)/lib$(TARGETNAME).so: $(addprefix $(SRCDIR)/, $(SRCS))
 	@mkdir -p $(OBJDIR)
 	$(CC) -I$(INCDIR) -lm -shared -fPIC $^ -o $@
-
-clean:
-	rm -rf $(BUILDDIR)
