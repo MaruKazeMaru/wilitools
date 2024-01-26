@@ -10,9 +10,10 @@ from ._rand import uniform_cube
 
 class Area:
     def __init__(
-        self, name:str, floor:Floor,
+        self, floor:Floor,
         init_prob:ndarray, tr_prob:ndarray, gaussian:Gaussian,
-        sample:ndarray, dens_sample:ndarray
+        sample:ndarray, dens_sample:ndarray,
+        name:str=None
     ):
         # meta
         self.name = name
@@ -45,7 +46,7 @@ class Area:
         return s
 
 
-def create_area(name:str, floor:Floor, sample_size:int=300) -> Area:
+def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Area:
     # hmm parameters
     _a = floor.lattice_from_delta(4)
     avrs = _a.reshape((_a.shape[0] * _a.shape[1], 2))
@@ -63,7 +64,8 @@ def create_area(name:str, floor:Floor, sample_size:int=300) -> Area:
     dens_sample = np.ones((sample_size,), dtype=np.float32)
 
     return Area(
-        name, floor,
+        floor,
         init_prob, tr_prob, Gaussian(avrs, covars),
-        sample, dens_sample
+        sample, dens_sample,
+        name = name
     )
