@@ -6,8 +6,20 @@ from numpy import ndarray
 
 class Gaussian:
     def __init__(self, avrs:ndarray, covars:ndarray):
-        self.avrs = avrs
-        self.covars = covars
+        # validate
+        if len(avrs.shape) != 2:
+            raise ValueError('avrs is not 2d array. its shape is {}'.format(avrs.shape))
+        if avrs.shape[1] != 2:
+            raise ValueError('avrs.shape[1] != 2. avrs.shape={}'.format(avrs.shape))
+        if len(covars) != 2:
+            raise ValueError('covars is not 2d array. its shape is {}'.format(covars.shape))
+        if covars.shape[1] != 3:
+            raise ValueError('covars.shape[1] != 2. covars.shape={}'.format(covars.shape))
+        if avrs.shape[0] == covars.shape[0]:
+            raise ValueError('unmatch shape[0] between avrs and covars. avrs.shape={}, covars.shape={}'.format(avrs.shape, covars.shape))
+
+        self.avrs = avrs.astype(np.float32)
+        self.covars = covars.astype(np.float32)
 
         # cache
         self._dets:ndarray = None
@@ -36,7 +48,7 @@ class Gaussian:
 
         motion_num = self.avrs.shape[0]
 
-        x_ = x.reshape((x_num, 1, 2)) - self.avrs.reshape((1, motion_num, 2))
+        x_ = x.astype(np.float32).reshape((x_num, 1, 2)) - self.avrs.reshape((1, motion_num, 2))
         # calc (x-myu)^T Sigma^-1 (x-myu)
         es = x_[:,:,0] * x_[:,:,0] * self.covars[:,2]
         es += x_[:,:,1] * x_[:,:,1] * self.covars[:,0]
@@ -46,7 +58,7 @@ class Gaussian:
         es = np.exp(-0.5 * es)
         es /= self._divs
 
-        ret = es @ weight # shape = (x_num,)
+        ret = es @ weight.astype(np.float32) # shape = (x_num,)
 
         if len(x_shape) == 0:
             ret = ret[0]
