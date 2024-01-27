@@ -67,5 +67,5 @@ def area_to_suggester(area:Area) -> Suggester:
     return Suggester(
         area.init_prob, area.tr_prob,
         area.gaussian.avrs, area.gaussian.covars,
-        area.sample, area.dens_sample
+        area.miss_probs, area.dens_miss_probs
     )

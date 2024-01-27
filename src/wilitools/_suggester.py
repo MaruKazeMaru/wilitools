@@ -10,7 +10,7 @@ from ._rand import uniform_cube
 class Suggester:
     def __init__(self,
         init_prob:ndarray, tr_prob:ndarray, gaussian:Gaussian,
-        sample:ndarray, dens_sample:ndarray
+        miss_probs:ndarray, dens_miss_probs:ndarray
     ):
         # ~~~ HMM ~~~
         # node
@@ -26,10 +26,11 @@ class Suggester:
         # average & covariance of position in each motion
         self.gaussian = gaussian
 
-        # sample
-        self.sample_num = dens_sample.shape[0]
-        self.sample = sample
-        self.dens_sample = dens_sample
+        # ~~~ transition miss probs ~~~
+        # samples
+        self.sample_num = dens_miss_probs.shape[0]
+        self.miss_probs = miss_probs
+        self.dens_miss_probs = dens_miss_probs # probability density of miss_probs
 
 
     def weight(self, miss_prob:ndarray) -> ndarray:
@@ -39,16 +40,6 @@ class Suggester:
         return L @ np.linalg.inv(np.identity(self.motion_num) - K) @ self.init_prob
 
 
-    # def gaussian(self, x:ndarray) -> ndarray:
-    #     e = ndarray((self.motion_num,))
-    #     x_s = x - self.avrs
-    #     for i in range(self.motion_num):
-    #         e[i] = x_s[i] @ self.inv_covars[i] @ x_s[i]
-    #         e[i] = np.exp(-0.5 * e[i])
-    #         e[i] /= self.gauss_divs[i]
-    #     return e
-
-
     def liklyhood(self, miss_prob:ndarray, x:ndarray=None) -> float:
         return self.gaussian.weighted(x, self.weight(miss_prob))
 
@@ -56,15 +47,15 @@ class Suggester:
     def expectation(self, f, f_kwargs:dict={}) -> float | ndarray:
         sum_f = 0.0
         for i in range(self.sample_num):
-            sum_f += self.dens_sample[i] * f(self.sample[i,:])
+            sum_f += self.dens_miss_probs[i] * f(self.miss_probs[i,:])
         return sum_f / self.sample_num
 
 
     def update(self, where_found:ndarray) -> None:
         exp_l = self.gaussian.weighted(where_found, self.expectation(self.weight))
         for i in range(self.sample_num):
-            self.dens_sample[i] = self.liklyhood(self.sample[i,:], x=where_found) * self.dens_sample[i]
-        self.dens_sample /= exp_l
+            self.dens_miss_probs[i] = self.liklyhood(self.miss_probs[i,:], x=where_found) * self.dens_miss_probs[i]
+        self.dens_miss_probs /= exp_l
 
 
     def suggest(self) -> ndarray:

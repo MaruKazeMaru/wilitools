@@ -19,10 +19,10 @@ class wiliDB:
         area_model = AreaModel()
         if (not area.name is None) and (len(area.name) > 1):
             area_model.name = area.name
-        area_model.x_min = area.floor.xmin
-        area_model.x_max = area.floor.xmax
-        area_model.y_min = area.floor.ymin
-        area_model.y_max = area.floor.ymax
+        area_model.x_min = area.floor.x_min
+        area_model.x_max = area.floor.x_max
+        area_model.y_min = area.floor.y_min
+        area_model.y_max = area.floor.y_max
 
         session = (sessionmaker(self.engine))()
         session.add(area_model)
@@ -37,7 +37,7 @@ class wiliDB:
 
         self.create_init_prob(motion_ids, area.init_prob)
         self.create_tr_prob(motion_ids, area.tr_prob)
-        self.create_samples(area_id, motion_ids, area.sample, area.dens_sample)
+        self.create_samples(area_id, motion_ids, area.miss_probs, area.dens_miss_probs)
 
         return area_id
 
@@ -93,14 +93,14 @@ class wiliDB:
         session.close()
 
 
-    def create_samples(self, area_id:int, motion_ids:list[int], miss_probs:np.ndarray, densitys:np.ndarray):
+    def create_samples(self, area_id:int, motion_ids:list[int], miss_probs:np.ndarray, dens_miss_probs:np.ndarray):
         ns, nm = miss_probs.shape # ns=sample num, nm=motion num
 
         models = []
         for k in range(ns):
             sample_model = SampleModel()
             sample_model.area = area_id
-            sample_model.dens = densitys[k]
+            sample_model.dens = dens_miss_probs[k]
             models.append(sample_model)
 
         session = (sessionmaker(self.engine))()
@@ -237,12 +237,12 @@ class wiliDB:
         session.close()
 
 
-    def update_samples(self, area_id:int, miss_probs:np.ndarray, densitys:np.ndarray):
+    def update_samples(self, area_id:int, miss_probs:np.ndarray, dens_miss_probs:np.ndarray):
         session = (sessionmaker(self.engine))()
 
         query_res = self._select_samples(session, area_id)
         for i, r in enumerate(query_res):
-            r.dens = densitys[i]
+            r.dens = dens_miss_probs[i]
 
         miss_probs_flat = miss_probs.flatten()
         query_res = self._select_miss_probs(session, area_id)
