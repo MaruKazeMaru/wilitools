@@ -160,18 +160,18 @@ class wiliDB:
     def read_init_prob(self, area_id:int) -> np.ndarray:
         session = (sessionmaker(self.engine))()
         query_res = self._select_init_prob(session, area_id)
-        init_prob = [r.tuple()[0].data for r in query_res]
+        init_prob = [r[0].data for r in query_res]
         session.close()
-        init_prob = np.array(init_prob)
+        init_prob = np.array(init_prob, dtype=np.float32)
         return init_prob
 
 
     def read_tr_prob(self, area_id:int) -> np.ndarray:
         session = (sessionmaker(self.engine))()
         query_res = self._select_tr_prob(session, area_id)
-        tr_prob = [r.tuple()[0].data for r in query_res]
+        tr_prob = [r[0].data for r in query_res]
         session.close()
-        tr_prob = np.array(tr_prob)
+        tr_prob = np.array(tr_prob, dtype=np.float32)
         n = tr_prob.shape[0]
         n = int(np.round(np.sqrt(n)))
         tr_prob = tr_prob.reshape((n,n))
@@ -183,7 +183,7 @@ class wiliDB:
         query_res = self._select_motions(session, area_id)
         gaussian_arr = [[r.avr_x, r.avr_y, r.covar_xx, r.covar_xy, r.covar_yy] for r in query_res]
         session.close()
-        gaussian_arr = np.array(gaussian_arr)
+        gaussian_arr = np.array(gaussian_arr, dtype=np.float32)
         return Gaussian(gaussian_arr[:,[0,1]], gaussian_arr[:,[2,3,4]])
 
 
@@ -192,13 +192,13 @@ class wiliDB:
 
         query_res = self._select_samples(session, area_id)
         densitys = [r.dens for r in query_res]
-        densitys = np.array(densitys)
+        densitys = np.array(densitys, dtype=np.float32)
         ns = densitys.shape[0]
 
         query_res = self._select_miss_probs(session, area_id)
-        miss_probs = [r.tuple()[0].data for r in query_res]
+        miss_probs = [r[0].data for r in query_res]
         session.close()
-        miss_probs = np.array(miss_probs)
+        miss_probs = np.array(miss_probs, dtype=np.float32)
         nm = int(np.round(miss_probs.shape[0] / ns))
         miss_probs = miss_probs.reshape((ns, nm))
 
@@ -209,7 +209,7 @@ class wiliDB:
         session = (sessionmaker(self.engine))()
         query_res = self._select_init_prob(session, area_id)
         for i, r in enumerate(query_res):
-            r.tuple()[0].data = init_prob[i]
+            r[0].data = init_prob[i]
         session.commit()
         session.close()
 
@@ -219,7 +219,7 @@ class wiliDB:
         session = (sessionmaker(self.engine))()
         query_res = self._select_tr_prob(session, area_id)
         for i, r in enumerate(query_res):
-            r.tuple()[0].data = tr_prob_flat[i]
+            r[0].data = tr_prob_flat[i]
         session.commit()
         session.close()
 
@@ -247,7 +247,7 @@ class wiliDB:
         miss_probs_flat = miss_probs.flatten()
         query_res = self._select_miss_probs(session, area_id)
         for i, r in enumerate(query_res):
-            r.tuple()[0].data = miss_probs_flat[i]
+            r[0].data = miss_probs_flat[i]
 
         session.commit()
         session.close()
@@ -255,7 +255,7 @@ class wiliDB:
 
     def delete_area(self, area_id:int):
         session = (sessionmaker(self.engine))()
-        area_model = session.query(AreaModel).get(area_id)
+        area_model = session.get(AreaModel, area_id)
         session.delete(area_model)
         session.commit()
         session.close()
