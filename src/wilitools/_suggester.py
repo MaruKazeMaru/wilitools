@@ -15,11 +15,11 @@ class Suggester:
         # validate
         if len(init_prob.shape) != 1:
             raise ValueError('init_prob is not vector. its shape is {}'.format(init_prob.shape))
-        if len(init_prob.shape) != 2:
+        if len(tr_prob.shape) != 2:
             raise ValueError('tr_prob is not matrix. its shape is {}'.format(tr_prob.shape))
-        if len(miss_probs) != 2:
+        if len(miss_probs.shape) != 2:
             raise ValueError('miss_probs is not 2d array. its shape is {}'.format(miss_probs.shape))
-        if len(dens_miss_probs) != 1:
+        if len(dens_miss_probs.shape) != 1:
             raise ValueError('dens_miss_probs is not 1d array. its shape is {}'.format(dens_miss_probs.shape))
         if not (
             init_prob.shape[0] == tr_prob.shape[0] and \
@@ -82,5 +82,5 @@ class Suggester:
         self.dens_miss_probs /= exp_l
 
 
-    def suggest(self, x:ndarray) -> float | ndarray:
+    def suggest(self, x:ndarray) -> np.float32 | ndarray:
         return self.gaussian.weighted(x, self._expectation(self._weight))

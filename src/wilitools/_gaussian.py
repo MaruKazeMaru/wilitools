@@ -11,11 +11,11 @@ class Gaussian:
             raise ValueError('avrs is not 2d array. its shape is {}'.format(avrs.shape))
         if avrs.shape[1] != 2:
             raise ValueError('avrs.shape[1] != 2. avrs.shape={}'.format(avrs.shape))
-        if len(covars) != 2:
+        if len(covars.shape) != 2:
             raise ValueError('covars is not 2d array. its shape is {}'.format(covars.shape))
         if covars.shape[1] != 3:
             raise ValueError('covars.shape[1] != 2. covars.shape={}'.format(covars.shape))
-        if avrs.shape[0] == covars.shape[0]:
+        if avrs.shape[0] != covars.shape[0]:
             raise ValueError('unmatch shape[0] between avrs and covars. avrs.shape={}, covars.shape={}'.format(avrs.shape, covars.shape))
 
         self.avrs = avrs.astype(np.float32)
@@ -35,7 +35,7 @@ class Gaussian:
         return s
 
 
-    def weighted(self, x:ndarray, weight:ndarray) -> float | ndarray:
+    def weighted(self, x:ndarray, weight:ndarray) -> np.float32 | ndarray:
         if self._divs is None:
             self._dets = self.covars[:,0] * self.covars[:,2] - self.covars[:,1] * self.covars[:,1]
             self._divs = 2.0 * np.pi * self._dets
