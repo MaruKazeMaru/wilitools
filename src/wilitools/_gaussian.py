@@ -23,7 +23,7 @@ class Gaussian:
         return s
 
 
-    def weighted(self, x:ndarray, weight:ndarray) -> ndarray:
+    def weighted(self, x:ndarray, weight:ndarray) -> float | ndarray:
         if self._divs is None:
             self._dets = self.covars[:,0] * self.covars[:,2] - self.covars[:,1] * self.covars[:,1]
             self._divs = 2.0 * np.pi * self._dets

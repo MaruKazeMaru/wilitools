@@ -33,30 +33,35 @@ class Suggester:
         self.dens_miss_probs = dens_miss_probs # probability density of miss_probs
 
 
-    def weight(self, miss_prob:ndarray) -> ndarray:
+    def _weight(self, miss_prob:ndarray) -> ndarray:
         L = miss_prob.reshape((self.motion_num, 1)) * self.tr_prob.T
-        L[np.diag_indices(self.motion_num)] = np.zeros(self.motion_num)
+        L[np.diag_indices(self.motion_num)] = np.zeros(self.motion_num, dtype=np.float32)
         K = self.tr_prob.T - L
-        return L @ np.linalg.inv(np.identity(self.motion_num) - K) @ self.init_prob
+        return L @ np.linalg.inv(np.identity(self.motion_num, dtype=np.float32) - K) @ self.init_prob
 
 
-    def liklyhood(self, miss_prob:ndarray, x:ndarray=None) -> float:
-        return self.gaussian.weighted(x, self.weight(miss_prob))
+    def _liklyhood(self, x:ndarray, miss_prob:ndarray) -> float:
+        return self.gaussian.weighted(x, self._weight(miss_prob))
 
 
-    def expectation(self, f, f_kwargs:dict={}) -> float | ndarray:
-        sum_f = 0.0
-        for i in range(self.sample_num):
+    def _expectation(self, f) -> float | ndarray:
+        sum_f = self.dens_miss_probs[0] * f(self.miss_probs[0,:])
+        for i in range(1, self.sample_num):
             sum_f += self.dens_miss_probs[i] * f(self.miss_probs[i,:])
         return sum_f / self.sample_num
 
 
     def update(self, where_found:ndarray) -> None:
-        exp_l = self.gaussian.weighted(where_found, self.expectation(self.weight))
+        # ---memo-------
+        # p : lost item probability, _weight
+        # b : position distribution of motion
+        # E[pb] = E[p]b
+        # --------------
+        exp_l = self.suggest(where_found)
         for i in range(self.sample_num):
-            self.dens_miss_probs[i] = self.liklyhood(self.miss_probs[i,:], x=where_found) * self.dens_miss_probs[i]
+            self.dens_miss_probs[i] = self._liklyhood(where_found, self.miss_probs[i,:]) * self.dens_miss_probs[i]
         self.dens_miss_probs /= exp_l
 
 
-    def suggest(self) -> ndarray:
-        return self.expectation(self.weight)
+    def suggest(self, x:ndarray) -> float | ndarray:
+        return self.gaussian.weighted(x, self._expectation(self._weight))
