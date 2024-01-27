@@ -180,5 +180,6 @@ data/
 
 build/
 
-# for db test
+# for test
 *.sqlite3
+test/area_out.json
