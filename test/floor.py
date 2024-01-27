@@ -5,16 +5,15 @@
 
 from wilitools import Floor, NegativeFloor
 
-def main():
+def test_floor():
     try:
         Floor(1.0, 0.0, 0.0, 3.0)
     except NegativeFloor:
         pass
+    else:
+        raise Exception('NegativeFloor was not raised')
 
-    f = Floor(-5.0, 5.0, -5.0, 5.0)
-    f.lattice_from_delta(4.0)
-    print(f)
-
-
-if __name__ == "__main__":
-    main()
+    f = Floor(-6.0, 6.0, -5.0, 5.0)
+    lattice = f.lattice_from_delta(4.0)
+    assert lattice.shape == (3, 2, 2)
+    str(f)

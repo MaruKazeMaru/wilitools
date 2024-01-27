@@ -5,10 +5,6 @@
 
 from wilitools import create_default_area, Floor
 
-def main():
+def test_area():
     area = create_default_area(Floor(-5.0, 5.0, -5.0, 5.0))
-    print(area)
-
-
-if __name__ == "__main__":
-    main()
+    str(area)

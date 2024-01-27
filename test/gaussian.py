@@ -6,17 +6,19 @@
 import numpy as np
 from wilitools import Gaussian
 
-def main():
+def test_gaussian():
     gaussian = Gaussian(
         np.array([[0.0, 1.1],       [-0.5, 0.1]]),
         np.array([[1.2, -0.3, 0.8], [0.7, 0.2, 0.3]])
     )
+
     weight = np.array([0.6, 0.4])
-    gaussian.weighted(np.random.random((2,)), weight)
-    gaussian.weighted(np.random.random((2,2)), weight)
-    gaussian.weighted(np.random.random((2,2,2)), weight)
-    print(gaussian)
 
+    gx = gaussian.weighted(np.random.random((2,)), weight)
+    assert type(gx) == np.float32
+    gx = gaussian.weighted(np.random.random((3,2)), weight)
+    assert gx.shape == (3,)
+    gx = gaussian.weighted(np.random.random((4,3,2)), weight)
+    assert gx.shape == (4,3)
 
-if __name__ == "__main__":
-    main()
+    str(gaussian)
