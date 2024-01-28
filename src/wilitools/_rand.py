@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: MIT License
 
 import numpy as np
-from numpy import ndarray
 
-def uniform_simplex(dim:int, size:int=None) -> ndarray:
+def uniform_simplex(dim:int, size:int=None) -> np.ndarray:
     if size is None:
         v = np.random.exponential(scale=1, size=dim).astype(np.float32)
         return v / np.sum(v)
@@ -13,7 +12,7 @@ def uniform_simplex(dim:int, size:int=None) -> ndarray:
        return (v / np.sum(v, axis=0)).T
 
 
-def uniform_cube(dim:int, size:int=None) -> ndarray:
+def uniform_cube(dim:int, size:int=None) -> np.ndarray:
     if size is None:
         v = np.random.uniform(0, 1, dim).astype(np.float32)
         return v
