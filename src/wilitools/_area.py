@@ -4,15 +4,16 @@
 import numpy as np
 from numpy import ndarray
 
-from .floor import Floor
-from .gaussian import Gaussian
-from .rand import uniform_cube
+from ._floor import Floor
+from ._gaussian import Gaussian
+from ._rand import uniform_cube
 
 class Area:
     def __init__(
-        self, name:str, floor:Floor,
+        self, floor:Floor,
         init_prob:ndarray, tr_prob:ndarray, gaussian:Gaussian,
-        sample:ndarray, dens_sample:ndarray
+        miss_probs:ndarray, dens_miss_probs:ndarray,
+        name:str=None
     ):
         # meta
         self.name = name
@@ -24,10 +25,10 @@ class Area:
         self.tr_prob = tr_prob
         self.gaussian = gaussian
 
-        # transition failure prob
-        self.sample_size = dens_sample.shape[0]
-        self.sample = sample
-        self.dens_sample = dens_sample
+        # transition miss prob
+        self.sample_size = dens_miss_probs.shape[0]
+        self.miss_probs = miss_probs
+        self.dens_miss_probs = dens_miss_probs # probability density of miss_probs
 
 
     def __str__(self) -> str:
@@ -45,7 +46,7 @@ class Area:
         return s
 
 
-def create_area(name:str, floor:Floor, sample_size:int=300) -> Area:
+def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Area:
     # hmm parameters
     _a = floor.lattice_from_delta(4)
     avrs = _a.reshape((_a.shape[0] * _a.shape[1], 2))
@@ -58,12 +59,13 @@ def create_area(name:str, floor:Floor, sample_size:int=300) -> Area:
     covars = np.ones((n, 3), dtype=np.float32)
     covars[:,1] = np.zeros((n,), dtype=np.float32)
 
-    # transition failure prob
-    sample = uniform_cube(n, sample_size)
-    dens_sample = np.ones((sample_size,), dtype=np.float32)
+    # transition miss prob
+    miss_probs = uniform_cube(n, sample_size)
+    dens_miss_probs = np.ones((sample_size,), dtype=np.float32)
 
     return Area(
-        name, floor,
+        floor,
         init_prob, tr_prob, Gaussian(avrs, covars),
-        sample, dens_sample
+        miss_probs, dens_miss_probs,
+        name = name
     )

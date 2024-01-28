@@ -179,3 +179,7 @@ pyrightconfig.json
 data/
 
 build/
+
+# for test
+*.sqlite3
+test/area_out.json
