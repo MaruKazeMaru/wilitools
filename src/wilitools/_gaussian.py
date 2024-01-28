@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
 # SPDX-License-Identifier: MIT License
 
+from __future__ import annotations
 import numpy as np
-from numpy import ndarray
 
 class Gaussian:
-    def __init__(self, avrs:ndarray, covars:ndarray):
+    def __init__(self, avrs:np.ndarray, covars:np.ndarray):
         # validate
         if len(avrs.shape) != 2:
             raise ValueError('avrs is not 2d array. its shape is {}'.format(avrs.shape))
@@ -22,8 +22,8 @@ class Gaussian:
         self.covars = covars.astype(np.float32)
 
         # cache
-        self._dets:ndarray = None
-        self._divs:ndarray = None
+        self._dets:np.ndarray = None
+        self._divs:np.ndarray = None
 
 
     def __str__(self) -> str:
@@ -35,7 +35,7 @@ class Gaussian:
         return s
 
 
-    def weighted(self, x:ndarray, weight:ndarray) -> np.float32 | ndarray:
+    def weighted(self, x:np.ndarray, weight:np.ndarray) -> np.float32 | np.ndarray:
         if self._divs is None:
             self._dets = self.covars[:,0] * self.covars[:,2] - self.covars[:,1] * self.covars[:,1]
             self._divs = 2.0 * np.pi * self._dets

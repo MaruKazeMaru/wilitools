@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: MIT License
 
 import numpy as np
-from numpy import ndarray
 
 from ._floor import Floor
 from ._gaussian import Gaussian
@@ -11,8 +10,8 @@ from ._rand import uniform_cube
 class Area:
     def __init__(
         self, floor:Floor,
-        init_prob:ndarray, tr_prob:ndarray, gaussian:Gaussian,
-        miss_probs:ndarray, dens_miss_probs:ndarray,
+        init_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
+        miss_probs:np.ndarray, dens_miss_probs:np.ndarray,
         name:str=None
     ):
         # meta

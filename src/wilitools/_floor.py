@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: MIT License
 
 import numpy as np
-from numpy import ndarray
 
 from ._exceptions import NegativeFloor
 
@@ -21,7 +20,7 @@ class Floor:
         return '({} {} {} {})'.format(self.x_min, self.x_max, self.y_min, self.y_max)
 
 
-    def lattice_from_delta(self, delta:float) -> ndarray:
+    def lattice_from_delta(self, delta:float) -> np.ndarray:
         nx = (self.x_max - self.x_min) / delta
         nx = max(1, int(np.round(nx)))
 

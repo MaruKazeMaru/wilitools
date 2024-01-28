@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: 2024 ShinagwaKazemaru
 # SPDX-License-Identifier: MIT License
 
+from __future__ import annotations
+
 import numpy as np
-from numpy import ndarray
 
 from ._gaussian import Gaussian
 from ._rand import uniform_cube
 
 class Suggester:
     def __init__(self,
-        init_prob:ndarray, tr_prob:ndarray, gaussian:Gaussian,
-        miss_probs:ndarray, dens_miss_probs:ndarray
+        init_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
+        miss_probs:np.ndarray, dens_miss_probs:np.ndarray
     ):
         # validate
         if len(init_prob.shape) != 1:
@@ -52,25 +53,25 @@ class Suggester:
         self.dens_miss_probs = dens_miss_probs.astype(np.float32) # probability density of miss_probs
 
 
-    def _weight(self, miss_prob:ndarray) -> ndarray:
+    def _weight(self, miss_prob:np.ndarray) -> np.ndarray:
         L = miss_prob.reshape((self.motion_num, 1)) * self.tr_prob.T
         L[np.diag_indices(self.motion_num)] = np.zeros(self.motion_num, dtype=np.float32)
         K = self.tr_prob.T - L
         return L @ np.linalg.inv(np.identity(self.motion_num, dtype=np.float32) - K) @ self.init_prob
 
 
-    def _liklyhood(self, x:ndarray, miss_prob:ndarray) -> float:
+    def _liklyhood(self, x:np.ndarray, miss_prob:np.ndarray) -> float:
         return self.gaussian.weighted(x, self._weight(miss_prob))
 
 
-    def _expectation(self, f) -> float | ndarray:
+    def _expectation(self, f) -> np.float32 | np.ndarray:
         sum_f = self.dens_miss_probs[0] * f(self.miss_probs[0,:])
         for i in range(1, self.sample_num):
             sum_f += self.dens_miss_probs[i] * f(self.miss_probs[i,:])
         return sum_f / self.sample_num
 
 
-    def update(self, where_found:ndarray) -> None:
+    def update(self, where_found:np.ndarray) -> None:
         # ---memo-------
         # p : lost item probability, _weight
         # b : position distribution of motion
@@ -82,5 +83,5 @@ class Suggester:
         self.dens_miss_probs /= exp_l
 
 
-    def suggest(self, x:ndarray) -> np.float32 | ndarray:
+    def suggest(self, x:np.ndarray) -> np.float32 | np.ndarray:
         return self.gaussian.weighted(x, self._expectation(self._weight))
