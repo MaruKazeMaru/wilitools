@@ -1,5 +1,11 @@
 from setuptools import setup, find_packages
 
+def get_requires():
+    with open('requirements.txt') as f:
+        requires = f.readlines()
+    return requires
+
+
 setup(
     name='wilitools',
     version='0.0.0',
@@ -13,8 +19,9 @@ setup(
     author_email='marukazemaru0@gmail.com',
     license='MIT',
 
-    install_requires=['numpy'],
-    python_requires='>=3',
+    include_package_data=True,
+    install_requires=get_requires(),
+    python_requires='>=3.9',
     packages=find_packages(where='src'),
     package_dir={'': 'src'}
 )
