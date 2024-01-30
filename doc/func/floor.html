@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<body>
+    <h1>Floor</h1>
+
+
+    <h2>概要</h2>
+    捜索範囲を表すクラスです。<br>
+    wilitoolsでは捜索範囲を<b>R</b><sup>2</sup>中の長方形と仮定しています。そこで
+
+
+    <h2>メンバ変数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>x_min</td>
+                <td>float</td>
+                <td>x方向の最小値</td>
+            </tr>
+            <tr>
+                <td>x_miax</td>
+                <td>float</td>
+                <td>x方向の最大値</td>
+            </tr>
+            <tr>
+                <td>y_min</td>
+                <td>float</td>
+                <td>y方向の最小値</td>
+            </tr>
+            <tr>
+                <td>y_max</td>
+                <td>float</td>
+                <td>y方向の最大値</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>コンストラクタ</h2>
+    <a style="font-size: large;">
+        Floor(<br>
+        <span style="margin-left: 2rem;">x_min:float,</span><br>
+        <span style="margin-left: 2rem;">x_max:float,</span><br>
+        <span style="margin-left: 2rem;">y_min:float,</span><br>
+        <span style="margin-left: 2rem;">y_max:float</span><br>
+        )
+    </a>
+    <h4>引数</h4>
+    <table>
+        <tbody>
+            <tr>
+                <td>x_min</td>
+                <td>x方向の最小値</td>
+            </tr>
+            <tr>
+                <td>x_max</td>
+                <td>x方向の最大値</td>
+            </tr>
+            <tr>
+                <td>y_min</td>
+                <td>y方向の最小値</td>
+            </tr>
+            <tr>
+                <td>y_max</td>
+                <td>y方向の最大値</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>メンバ関数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="./floor_get_lattice.html">lattice_from_delta</a></td>
+                <td>捜索範囲内の格子点を取得<br>格子の間隔は引数で指定</td>
+            </tr>
+        </tbody>
+    </table>
+</body>

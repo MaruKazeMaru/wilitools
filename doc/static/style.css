@@ -1,0 +1,12 @@
+h1, h2, h3, h4{
+    margin-bottom: 0.5rem;
+}
+
+th,td {
+    border: solid 1px;
+    padding: 0.2rem 0.5rem;
+}
+
+table {
+    border-collapse:  collapse;
+}

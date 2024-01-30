@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<header>
+    <link rel="stylesheet" href="../static/style.css">
+</header>
+
+<body>
+    <h1>クラス</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    名称
+                </th>
+                <th>
+                    概要
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a>NegativeFloor</a>
+                </td>
+                <td>
+                    Floorインスタンス作成に不正な値を使うと発生する例外
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./floor.html">Floor</a>
+                </td>
+                <td>
+                    捜索範囲
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./gaussian.html">Gaussian</a>
+                </td>
+                <td>
+                    混合ガウス分布の密度関数の計算用
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a>Area</a>
+                </td>
+                <td>
+                    捜索範囲、遷移確率、初期動作確率、遷移失敗確率、利用者位置分布をまとめたクラス
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a>Suggester</a>
+                </td>
+                <td>
+                    なくしもの位置の推定、遷移失敗確率の更新用
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a>wiliDB</a>
+                </td>
+                <td>
+                    データベースによる各種パラメータ（捜索範囲や遷移確率など）の管理用
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>関数</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <a>create_default_area</a>
+                </td>
+                <td>
+                    最小限のパラメータからAreaクラスのインスタンスを作成するためのクラスです。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a>json_to_area</a>
+                </td>
+                <td>
+                    JSON形式のファイルからAreaクラスのインスタンスを作成するクラスです。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a>area_to_json</a>
+                </td>
+                <td>
+                    AreaクラスのインスタンスをJSON形式のファイルに書き出します。
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a>area_to_suggester</a>
+                </td>
+                <td>
+                    AreaクラスのインスタンスからSuggesterクラスのインスタンスを作成します。
+                </td>
+            </tr>
+            </tbody>
+    </table>
+</body>
