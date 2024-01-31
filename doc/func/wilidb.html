@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<header>
+    <link rel="stylesheet" href="../style/style.css">
+</header>
+
+<body>
+    <a href="../index.html">トップ</a><span class="breadspan">></span>
+    <a href="./index.html">リファレンス</a><span class="breadspan">></span>
+    wiliDB
+
+    <!-- クラス名 -->
+    <h1>wiliDB</h1>
+
+
+    <h2>概要</h2>
+    データベース（以下DB）を操作するためのクラスです。各種パラメータ（捜索範囲、遷移確率など）の追加、参照、更新、削除ができます。
+
+
+    <h2>メンバ変数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>コンストラクタ</h2>
+    <a class="funcdef">
+        wiliDB(<br>
+        <span class="indent"></span>db_path:str<br>
+        )
+    </a>
+
+    <h4>引数</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>db_path</td>
+                <td>str</td>
+                <td>DBのURL<br>（SQLAlchemyの記法に準拠）</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br><b>備考</b><br>
+    DBのURLの記法はSQLAlchemyの公式ドキュメントなどをご参照ください。<br>
+    SQLAlchemyの公式ドキュメント：<a href="https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls" target="_blank" rel="noopener noreferrer">https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls</a>
+
+
+    <h2>メンバ関数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- CREATE -->
+            <tr>
+                <td><a href="./.html"></a>create_area</td>
+                <td>DBに捜索範囲、初期動作確率、遷移確率、利用者位置分布、遷移失敗確率をまとめて追加</td>
+            </tr>
+            <!-- READ -->
+            <tr>
+                <td><a href="./.html"></a>read_floor</td>
+                <td>DBから捜索範囲を取得</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>read_init_prob</td>
+                <td>DBから初期動作確率を取得</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>read_tr_prob</td>
+                <td>DBから遷移確率を取得</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>read_gaussian</td>
+                <td>DBから利用者位置分布を取得</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>read_samlpes</td>
+                <td>DBから遷移失敗確率を取得</td>
+            </tr>
+            <!-- UPDATE -->
+            <tr>
+                <td><a href="./.html"></a>update_floor</td>
+                <td>DB内の捜索範囲を更新</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>update_init_prob</td>
+                <td>DB内の初期動作確率を更新</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>update_tr_prob</td>
+                <td>DBから遷移確率を更新</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>update_gaussian</td>
+                <td>DB内の利用者位置分布を更新</td>
+            </tr>
+            <tr>
+                <td><a href="./.html"></a>update_samlpes</td>
+                <td>DB内の遷移失敗確率を更新</td>
+            </tr>
+            <!-- DELETE -->
+            <tr>
+                <td><a href="./.html"></a>delete_area</td>
+                <td>DBに捜索範囲、初期動作確率、遷移確率、利用者位置分布、遷移失敗確率をまとめて削除</td>
+            </tr>
+        </tbody>
+    </table>
+</body>

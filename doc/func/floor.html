@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 
+<header>
+    <link rel="stylesheet" href="../style/style.css">
+</header>
+
 <body>
+    <a href="../index.html">トップ</a><span class="breadspan">></span>
+    <a href="./index.html">リファレンス</a><span class="breadspan">></span>
+    Floor
+
     <h1>Floor</h1>
 
 
@@ -44,35 +52,50 @@
 
 
     <h2>コンストラクタ</h2>
-    <a style="font-size: large;">
+    <a class="funcdef">
         Floor(<br>
-        <span style="margin-left: 2rem;">x_min:float,</span><br>
-        <span style="margin-left: 2rem;">x_max:float,</span><br>
-        <span style="margin-left: 2rem;">y_min:float,</span><br>
-        <span style="margin-left: 2rem;">y_max:float</span><br>
+        <span class="indent"></span>x_min:float,<br>
+        <span class="indent"></span>x_max:float,<br>
+        <span class="indent"></span>y_min:float,<br>
+        <span class="indent"></span>y_max:float<br>
         )
     </a>
+
     <h4>引数</h4>
     <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
                 <td>x_min</td>
+                <td>float</td>
                 <td>x方向の最小値</td>
             </tr>
             <tr>
                 <td>x_max</td>
+                <td>float</td>
                 <td>x方向の最大値</td>
             </tr>
             <tr>
                 <td>y_min</td>
+                <td>float</td>
                 <td>y方向の最小値</td>
             </tr>
             <tr>
                 <td>y_max</td>
+                <td>float</td>
                 <td>y方向の最大値</td>
             </tr>
         </tbody>
     </table>
+
+    <br><b>備考</b><br>
+    x_minがx_maxより大きい、またはy_minがy_maxより大きい場合はValueErrorを発生させます。
 
 
     <h2>メンバ関数</h2>
@@ -85,7 +108,7 @@
         </thead>
         <tbody>
             <tr>
-                <td><a href="./floor_get_lattice.html">lattice_from_delta</a></td>
+                <td><a href="./floor_get_lattice.html">get_lattice</a></td>
                 <td>捜索範囲内の格子点を取得<br>格子の間隔は引数で指定</td>
             </tr>
         </tbody>

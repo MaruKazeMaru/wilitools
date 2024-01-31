@@ -1,0 +1,51 @@
+body{
+    padding-left: 1rem;
+    background-color: white;
+    color: black;
+}
+
+h1, h2, h3, h4{
+    margin-bottom: 0.4rem;
+}
+
+h3, h4{
+    margin-top: 0.4rem;
+}
+
+th,td {
+    border: solid 1px;
+    padding: 0.2rem 0.5rem;
+}
+
+table {
+    border-collapse:  collapse;
+}
+
+div:has(>pre){
+    margin: 0px;
+    padding: 0.5rem;
+    width: fit-content;
+    background-color: black;
+    color: white;
+}
+
+img{
+    width: 35%;
+    min-width: 300px;
+}
+
+.funcdef{
+    font-size: large;
+}
+
+.indent{
+    padding-left: 2rem;
+}
+
+.arrow{
+    padding: 0px 0.5rem;
+}
+
+.breadspan{
+    padding: 0px 0.5rem;
+}
