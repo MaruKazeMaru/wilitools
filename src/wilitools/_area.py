@@ -47,7 +47,7 @@ class Area:
 
 def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Area:
     # hmm parameters
-    _a = floor.lattice_from_delta(4)
+    _a = floor.get_lattice(4)
     avrs = _a.reshape((_a.shape[0] * _a.shape[1], 2))
 
     n = avrs.shape[0]
