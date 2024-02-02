@@ -34,18 +34,18 @@ class Area:
         s_g = self.gaussian.__str__()
         s_t = self.tr_prob.__str__()
 
-        h = '              '
-        s = 'name        : %s\n' % self.name \
-          + 'floorsize   : {}\n'.format(self.floor) \
-          + 'motion_num  : %d\n' % self.motion_num \
-          + 'init_prob   : {}\n'.format(self.init_prob) \
-          + 'tr_prob     : ' + s_t.replace('\n', '\n' + h) + '\n' \
-          + 'gaussian    : \n' + s_g + '\n' \
-          + 'sample_size : %d' % self.sample_size
+        h = '             '
+        s = 'name       : %s\n' % self.name \
+          + 'floor      : {}\n'.format(self.floor) \
+          + 'motion_num : %d\n' % self.motion_num \
+          + 'init_prob  : {}\n'.format(self.init_prob) \
+          + 'tr_prob    : ' + s_t.replace('\n', '\n' + h) + '\n' \
+          + 'gaussian   : \n' + s_g + '\n' \
+          + 'sample_num : %d' % self.sample_size
         return s
 
 
-def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Area:
+def create_default_area(floor:Floor, name:str = None, sample_num:int=300) -> Area:
     # hmm parameters
     _a = floor.get_lattice(4)
     avrs = _a.reshape((_a.shape[0] * _a.shape[1], 2))
@@ -59,8 +59,8 @@ def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Ar
     covars[:,1] = np.zeros((n,), dtype=np.float32)
 
     # transition miss prob
-    miss_probs = uniform_cube(n, sample_size)
-    dens_miss_probs = np.ones((sample_size,), dtype=np.float32)
+    miss_probs = uniform_cube(n, sample_num)
+    dens_miss_probs = np.ones((sample_num,), dtype=np.float32)
 
     return Area(
         floor,

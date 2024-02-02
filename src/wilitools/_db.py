@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from ._gaussian import Gaussian
 from ._area import Area
-from wilitools._models import Base, AreaModel, MotionModel, InitProbModel, TrProbModel, SampleModel, MissProbModel
+from ._models import Base, AreaModel, MotionModel, InitProbModel, TrProbModel, SampleModel, MissProbModel
 
 class wiliDB:
     def __init__(self, db_path:str):

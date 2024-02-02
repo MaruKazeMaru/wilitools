@@ -14,7 +14,7 @@ def test_db():
     except: pass
     db = wiliDB('sqlite:///{}'.format(db_path))
 
-    area = create_default_area(Floor(-5.0, 5.0, -5.0, 5.0), sample_size=7)
+    area = create_default_area(Floor(-5.0, 5.0, -5.0, 5.0), sample_num=7)
 
     area_id = db.create_area(area)
 
