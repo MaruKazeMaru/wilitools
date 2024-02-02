@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="../../style/style.css" type="text/css">
+</head>
+
+<body>
+    <a href=".../index.html">トップ</a><span class="breadspan">></span>
+    <a href="../index.html">リファレンス</a><span class="breadspan">></span>
+    <a href="../gaussian.html">Gaussian</a><span class="breadspan">></span>
+    weighted
+
+    <hr>
+
+    <h1>Gaussian.weighted</h1>
+    <a class="funcdef">
+        Gaussian.weighted(<br>
+        <span class="indent"></span>x:numpy.ndarray,<br>
+        <span class="indent"></span>weight:numpy.ndarray<br>
+        )<span class="arrow">-></span>numpy.float32 | numpy.ndarray
+    </a>
+
+
+    <h2>概要</h2>
+    混合正規分布の密度関数を計算します。<br>
+    2次元混合正規分布の密度関数は次のような形をしています。<br>
+    <img src="../../img/gaussian_dens.png"><br>
+    weighted関数は引数としてxとwを渡し、戻り値としてfを得ます。<br>
+    xは複数まとめて渡すこともできます。
+
+
+    <h2>引数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>x</td>
+                <td>numpy.ndarray</td>
+                <td>
+                    密度関数の変数（上式のx）<br>
+                    配列の次元は任意です。ただし最後の次元の要素数は2でなくてはなりません。<br>
+                    例えば配列の次元が(5,3,2)や(2)の場合は問題ありませんが、(5,3,3)の場合はエラーが発生します。
+                </td>
+            </tr>
+            <tr>
+                <td>weight</td>
+                <td>numpy.ndarray</td>
+                <td>各正規分布の重み（上式のw）</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>戻り値</h2>
+    <b>型</b>：numpy.float32 | numpy.ndarray<br>
+    <b>概要</b>：<br>
+    密度関数の値（上式のf）です。<br>
+    引数xが1次元配列ならばfloat32に、m次元配列ならばm-1次元配列のndarrayになります。
+
+
+    <h2>使用例1</h2>
+    引数xが1次元配列（＝ベクトル1個）の場合の例です。
+    <div><pre><code>from wilitools import Gaussian
+import numpy as np
+
+gaussian = Gaussian( \
+    np.array([[0,1], [0,-1]]), \
+    np.array([[0.5,0,0.5], [0.5,0,0.5]]) \
+)
+
+w = np.array([0.3, 0.7])
+
+x = np.array([0, 0])
+print('x=')
+print(x)
+
+f = gaussian.weighted(x, w)
+print('f=')
+print(f)
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <div><pre><code>x=
+[0 0]
+f=
+0.2341993</code></pre></div>
+
+    <h2>使用例2</h2>
+    引数xが2次元配列（＝ベクトル複数個）の場合の例です。
+    <div><pre><code>from wilitools import Gaussian
+import numpy as np
+
+gaussian = Gaussian( \
+    np.array([[0,1], [0,-1]]), \
+    np.array([[0.5,0,0.5], [0.5,0,0.5]]) \
+)
+
+w = np.array([0.3, 0.7])
+
+x = np.linspace([0,-2], [0,2], 5) # changed this line
+print('x=')
+print(x)
+
+f = gaussian.weighted(x, w)
+print('f=')
+print(f)
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <div><pre><code>x=
+[[ 0. -2.]
+ [ 0. -1.]
+ [ 0.  0.]
+ [ 0.  1.]
+ [ 0.  2.]]
+f=
+[0.16396308 0.44913185 0.2341993  0.199148   0.07031479]
+</code></pre></div>
+
+</body>

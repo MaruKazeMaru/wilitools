@@ -1,5 +1,5 @@
 body{
-    padding-left: 1rem;
+    padding: 0.3rem 1rem;
     background-color: white;
     color: black;
 }
@@ -25,11 +25,11 @@ div:has(>pre){
     margin: 0px;
     padding: 0.5rem;
     width: fit-content;
-    background-color: black;
+    background-color: #181818;
     color: white;
 }
 
-img{
+img.fig{
     width: 35%;
     min-width: 300px;
 }
