@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<header>
+    <link rel="stylesheet" href="../style/style.css">
+</header>
+
+<body>
+    <a href="../index.html">トップ</a><span class="breadspan">></span>
+    <a href="./index.html">リファレンス</a><span class="breadspan">></span>
+    area_to_json
+
+    <hr>
+
+    <h1></h1>
+    <a class="funcdef">
+        area_to_json(<br>
+        <span class="indent">json_path:str,</span><br>
+        <span class="indent">area:Area,</span><br>
+        <span class="indent">miss_probs_in:bool = False,</span><br>
+        <span class="indent">json_dump_kwargs:dict = {}</span><br>
+        )<span class="arrow">-></span>None
+    </a>
+
+
+    <h2>概要</h2>
+    AreaインスタンスをJSONファイルに出力します。
+
+
+    <h2>引数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>json_path</td>
+                <td>str</td>
+                <td>出力先JSONファイルのパス</td>
+            </tr>
+            <tr>
+                <td>area</td>
+                <td><a href="./area.html">Area</a></td>
+                <td>出力元Areaインスタンス</td>
+            </tr>
+            <tr>
+                <td>miss_probs_in</td>
+                <td>bool</td>
+                <td>
+                    遷移失敗確率のサンプルを出力するか
+                </td>
+            </tr>
+            <tr>
+                <td>json_dump_kwargs</td>
+                <td>dict</td>
+                <td>
+                    JSONファイルに出力する際のオプション<br>
+                    内部でjson.dump関数を呼び出しており、json_dump_kwargsはその関数に渡すオプション引数です。json.dumpのオプション引数についてはPython公式ドキュメント等をご参照ください。<br>
+                    Python公式ドキュメント：<a href="https://docs.python.org/ja/3/library/json.html">https://docs.python.org/ja/3/library/json.html</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>戻り値</h2>
+    なし
+
+
+    <h2>使用例</h2>
+    <div><pre><code>from wilitools import json_to_area, area_to_json
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <img src="../img/.jpeg" alt="使用例 実行結果">
+
+</body>

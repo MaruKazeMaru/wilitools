@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<header>
+    <link rel="stylesheet" href="../style/style.css">
+</header>
+
+<body>
+    <a href="../index.html">トップ</a><span class="breadspan">></span>
+    <a href="./index.html">リファレンス</a><span class="breadspan">></span>
+    area_to_suggester
+
+    <hr>
+
+    <h1>area_to_suggester</h1>
+    <a class="funcdef">
+        area_to_suggester(<br>
+        <span class="indent">area:Area</span><br>
+        )<span class="arrow">-></span>Suggester
+    </a>
+
+
+    <h2>概要</h2>
+    AreaインスタンスをもとにSuggesterインスタンスを作成します。
+
+
+    <h2>引数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>area</td>
+                <td><a href="./area.html">Area</a></td>
+                <td>変換元のAreaインスタンス</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>戻り値</h2>
+    <b>型</b>：<a href="./suggester.html">Suggester</a><br>
+    <b>概要</b>：<br>
+    変換後のsuggesterインスタンス
+
+
+    <h2>使用例</h2>
+    <div><pre><code>from wilitools import Floor, create_default_area, area_to_suggester
+
+floor = Floor(-5.0, 5.0, -5.0, 5.0)
+area = create_default_area(floor)
+
+suggester = area_to_suggester(area)
+
+print("~~~BEFORE~~~")
+print(area.gaussian)
+print("~~~AFTER~~~~")
+print(suggester.gaussian)
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <div><pre><code>~~~BEFORE~~~
+avrs   : [[-2.5 -2.5]
+          [-2.5  2.5]
+          [ 2.5 -2.5]
+          [ 2.5  2.5]]
+covars : [[1. 0. 1.]
+          [1. 0. 1.]
+          [1. 0. 1.]
+          [1. 0. 1.]]
+~~~AFTER~~~~
+avrs   : [[-2.5 -2.5]
+          [-2.5  2.5]
+          [ 2.5 -2.5]
+          [ 2.5  2.5]]
+covars : [[1. 0. 1.]
+          [1. 0. 1.]
+          [1. 0. 1.]
+          [1. 0. 1.]]
+</code></pre></div>
+
+</body>

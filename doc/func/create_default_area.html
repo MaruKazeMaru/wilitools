@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<header>
+    <link rel="stylesheet" href="../style/style.css">
+</header>
+
+<body>
+    <a href="../index.html">トップ</a><span class="breadspan">></span>
+    <a href="./index.html">リファレンス</a><span class="breadspan">></span>
+    create_default_area
+
+    <hr>
+
+    <h1>create_default_area</h1>
+    <a class="funcdef">
+        create_default_area(<br>
+        <span class="indent">floor:Floor,</span><br>
+        <span class="indent">name:str|None = None,</span><br>
+        <span class="indent">sample_num:int = 300</span><br>
+        )<span class="arrow">-></span>Area
+    </a>
+
+
+    <h2>概要</h2>
+    Areaインスタンスを作成します。<br>
+    捜索範囲以外（初期動作確率、遷移確率、利用者位置分布、遷移失敗確率）はデフォルト値になります。
+
+
+    <h2>引数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>floor</td>
+                <td><a href="./floor.html">Floor</a></td>
+                <td>捜索範囲</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>str|None</td>
+                <td>名前（メタデータ）</td>
+            </tr>
+            <tr>
+                <td>sample_num</td>
+                <td>int</td>
+                <td>遷移失敗確率のサンプル数</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>戻り値</h2>
+    <b>型</b>：<a href="./area.html">Area</a><br>
+    <b>概要</b>：<br>
+    作成されたAreaインスタンス
+
+
+    <h2>使用例</h2>
+
+    <div><pre><code>from wilitools import Floor, create_default_area
+
+floor = Floor(-5.0, 5.0, -5.0, 5.0)
+area = create_default_area(floor, sample_num=10)
+
+print(area)
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <div><pre><code>name        : None
+floor       : (-5.0 5.0 -5.0 5.0)
+motion_num  : 4
+init_prob   : [0.25 0.25 0.25 0.25]
+tr_prob     : [[0.25 0.25 0.25 0.25]
+               [0.25 0.25 0.25 0.25]
+               [0.25 0.25 0.25 0.25]
+               [0.25 0.25 0.25 0.25]]
+gaussian    : 
+avrs   : [[-2.5 -2.5]
+          [-2.5  2.5]
+          [ 2.5 -2.5]
+          [ 2.5  2.5]]
+covars : [[1. 0. 1.]
+          [1. 0. 1.]
+          [1. 0. 1.]
+          [1. 0. 1.]]
+sample_num : 10
+</code></pre></div>
+
+</body>
