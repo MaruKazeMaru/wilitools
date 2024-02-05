@@ -29,6 +29,7 @@ def test_db():
     db.update_tr_prob(area_id, area.tr_prob)
     db.update_gaussian(area_id, area.gaussian)
     db.update_samples(area_id, area.miss_probs, area.dens_miss_probs)
+    db.update_dens(area_id, area.dens_miss_probs)
 
     record = db.read_init_prob(area_id)
     assert record.shape == area.init_prob.shape

@@ -253,6 +253,17 @@ class wiliDB:
         session.close()
 
 
+    def update_dens(self, area_id:int, dens_miss_probs:np.ndarray):
+        session = (sessionmaker(self.engine))()
+
+        query_res = self._select_samples(session, area_id)
+        for i, r in enumerate(query_res):
+            r.dens = dens_miss_probs[i]
+
+        session.commit()
+        session.close()
+
+
     def delete_area(self, area_id:int):
         session = (sessionmaker(self.engine))()
         area_model = session.get(AreaModel, area_id)
