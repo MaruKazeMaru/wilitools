@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<header>
+    <link rel="stylesheet" href="../../style/style.css">
+</header>
+
+<body>
+    <a href="../../index.html">トップ</a><span class="breadspan">></span>
+    <a href="../index.html">リファレンス</a><span class="breadspan">></span>
+    <a href="../suggester.html">Suggester</a><span class="breadspan">></span>
+    suggest
+
+    <hr>
+
+    <h1>Suggester.suggest</h1>
+    <a class="funcdef">
+        Suggester.suggest(<br>
+        <span class="indent"></span>x:numpy.ndarray<br>
+        )<span class="arrow">-></span>numpy.ndarray
+    </a>
+
+
+    <h2>概要</h2>
+    なくしもの位置の推定を行います。<br>
+    推定結果は次のような式で表されます。<br>
+    <img src="../../img/estimate.png"><br>
+    suggest関数は引数としてxを渡し、戻り値としてfを得ます。<br>
+
+
+    <h2>引数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>型</th>
+                <th>概要</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>x</td>
+                <td>numpy.ndarray</td>
+                <td>
+                    推定結果の変数（上式のx）<br>
+                    配列の次元は任意です。ただし最後の次元の要素数は2である必要があります。<br>
+                    例えば配列の次元が(5,3,2)や(2)の場合は問題ありませんが、(5,3,3)の場合はエラーが発生します。
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h2>戻り値</h2>
+    <b>型</b>：numpy.ndarray<br>
+    <b>概要</b>：<br>
+    推定結果の値（上式のf）です。<br>
+    引数xが1次元配列ならばfloat32に、m次元配列ならばm-1次元配列のndarrayになります。
+
+
+    <h2>使用例1</h2>
+    引数xが1次元配列（＝ベクトル1個）の場合の例です。
+    <div><pre><code>from wilitools import create_default_area, area_to_suggester, Floor
+import numpy as np
+
+floor = Floor(-5, 5, -5, 5)
+area = create_default_area(floor)
+suggester = area_to_suggester(area)
+
+x = np.array([0, 0])
+print('x=')
+print(x)
+
+f = suggester.suggest(x)
+print('f=')
+print(f)
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <div><pre><code>x=
+[0 0]
+f=
+0.00030724137</code></pre></div>
+
+
+    <h2>使用例2</h2>
+    引数xが2次元配列（＝ベクトル複数個）の場合の例です。
+    <div><pre><code>from wilitools import create_default_area, area_to_suggester, Floor
+import numpy as np
+
+floor = Floor(-5, 5, -5, 5)
+area = create_default_area(floor)
+suggester = area_to_suggester(area)
+
+x = np.linspace([0,-2], [0,2], 5) # changed this line
+print('x=')
+print(x)
+
+f = suggester.suggest(x)
+print('f=')
+print(f)
+</code></pre></div>
+
+    <h4>実行結果</h4>
+    <div><pre><code>x=
+[[ 0. -2.]
+ [ 0. -1.]
+ [ 0.  0.]
+ [ 0.  1.]
+ [ 0.  2.]]
+f=
+[0.00301858 0.00111824 0.00030724 0.00116728 0.00315281]
+</code></pre></div>
+</body>
