@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 
 <header>
-    <link rel="stylesheet" href="../../style/style.css">
+    <link rel="stylesheet" href="../../other/style.css">
+    <link rel="stylesheet" href="../../other/prism.css">
 </header>
 
 <body>
+    <script src="../../other/prism.js"></script>
+
     <a href="../../index.html">トップ</a><span class="breadspan">></span>
     <a href="../index.html">リファレンス</a><span class="breadspan">></span>
     <a href="../suggester.html">Suggester</a><span class="breadspan">></span>
@@ -59,7 +62,7 @@
 
     <h2>使用例1</h2>
     引数xが1次元配列（＝ベクトル1個）の場合の例です。
-    <div><pre><code>from wilitools import create_default_area, area_to_suggester, Floor
+    <pre><code class="language-python">from wilitools import create_default_area, area_to_suggester, Floor
 import numpy as np
 
 floor = Floor(-5, 5, -5, 5)
@@ -73,18 +76,18 @@ print(x)
 f = suggester.suggest(x)
 print('f=')
 print(f)
-</code></pre></div>
+</code></pre>
 
     <h4>実行結果</h4>
-    <div><pre><code>x=
+    <pre><code class="language-none">x=
 [0 0]
 f=
-0.00030724137</code></pre></div>
+0.00030724137</code></pre>
 
 
     <h2>使用例2</h2>
     引数xが2次元配列（＝ベクトル複数個）の場合の例です。
-    <div><pre><code>from wilitools import create_default_area, area_to_suggester, Floor
+    <pre><code class="language-python">from wilitools import create_default_area, area_to_suggester, Floor
 import numpy as np
 
 floor = Floor(-5, 5, -5, 5)
@@ -98,10 +101,10 @@ print(x)
 f = suggester.suggest(x)
 print('f=')
 print(f)
-</code></pre></div>
+</code></pre>
 
     <h4>実行結果</h4>
-    <div><pre><code>x=
+    <pre><code class="language-none">x=
 [[ 0. -2.]
  [ 0. -1.]
  [ 0.  0.]
@@ -109,5 +112,5 @@ print(f)
  [ 0.  2.]]
 f=
 [0.00301858 0.00111824 0.00030724 0.00116728 0.00315281]
-</code></pre></div>
+</code></pre>
 </body>

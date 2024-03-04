@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 
-<head>
-    <link rel="stylesheet" href="../../style/style.css">
-</head>
+<header>
+    <link rel="stylesheet" href="../../other/style.css">
+    <link rel="stylesheet" href="../../other/prism.css">
+</header>
 
 <body>
+    <script src="../../other/prism.js"></script>
+
     <a href="../../index.html">トップ</a><span class="breadspan">></span>
     <a href="../index.html">リファレンス</a><span class="breadspan">></span>
     <a href="../floor.html">Floor</a><span class="breadspan">></span>
@@ -52,7 +55,7 @@
 
     <h2>使用例</h2>
     格子点をMatplot1ibを用いて可視化するスクリプトです。
-    <div><pre><code>from wilitools import Floor
+    <pre><code class="language-python">from wilitools import Floor
 import matplotlib.pyplot as plt
     
 floor = Floor(-2.0, 2.0, -1.5, 1.5)
@@ -62,7 +65,7 @@ plt.figure()
 for r in range(lat.shape[0]):
     for c in range(lat.shape[1]):
         plt.scatter(lat[r,c,0], lat[r,c,1], color='black')
-plt.show()</code></pre></div>
+plt.show()</code></pre>
 
     <h4>出力画像</h4>
     <img class="fig" src="../../img/floor_get_lattice_sample.jpeg" alt="使用例 実行結果">

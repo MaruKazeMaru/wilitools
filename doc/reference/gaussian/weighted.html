@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 
-<head>
-    <link rel="stylesheet" href="../../style/style.css" type="text/css">
-</head>
+<header>
+    <link rel="stylesheet" href="../../other/style.css">
+    <link rel="stylesheet" href="../../other/prism.css">
+</header>
 
 <body>
+    <script src="../../other/prism.js"></script>
+
     <a href=".../index.html">トップ</a><span class="breadspan">></span>
     <a href="../index.html">リファレンス</a><span class="breadspan">></span>
     <a href="../gaussian.html">Gaussian</a><span class="breadspan">></span>
@@ -66,7 +69,7 @@
 
     <h2>使用例1</h2>
     引数xが1次元配列（＝ベクトル1個）の場合の例です。
-    <div><pre><code>from wilitools import Gaussian
+    <pre><code class="language-python">from wilitools import Gaussian
 import numpy as np
 
 gaussian = Gaussian( \
@@ -83,17 +86,17 @@ print(x)
 f = gaussian.weighted(x, w)
 print('f=')
 print(f)
-</code></pre></div>
+</code></pre>
 
     <h4>実行結果</h4>
-    <div><pre><code>x=
+    <pre><code class="language-none">x=
 [0 0]
 f=
-0.2341993</code></pre></div>
+0.2341993</code></pre>
 
     <h2>使用例2</h2>
     引数xが2次元配列（＝ベクトル複数個）の場合の例です。
-    <div><pre><code>from wilitools import Gaussian
+    <pre><code class="language-python">from wilitools import Gaussian
 import numpy as np
 
 gaussian = Gaussian( \
@@ -110,10 +113,10 @@ print(x)
 f = gaussian.weighted(x, w)
 print('f=')
 print(f)
-</code></pre></div>
+</code></pre>
 
     <h4>実行結果</h4>
-    <div><pre><code>x=
+    <pre><code class="language-none">x=
 [[ 0. -2.]
  [ 0. -1.]
  [ 0.  0.]
@@ -121,6 +124,6 @@ print(f)
  [ 0.  2.]]
 f=
 [0.16396308 0.44913185 0.2341993  0.199148   0.07031479]
-</code></pre></div>
+</code></pre>
 
 </body>

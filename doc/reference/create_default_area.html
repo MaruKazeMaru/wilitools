@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 
 <header>
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../other/style.css">
+    <link rel="stylesheet" href="../other/prism.css">
 </header>
 
 <body>
+    <script src="../other/prism.js"></script>
+
     <a href="../index.html">トップ</a><span class="breadspan">></span>
     <a href="./index.html">リファレンス</a><span class="breadspan">></span>
     create_default_area
@@ -63,16 +66,16 @@
 
     <h2>使用例</h2>
 
-    <div><pre><code>from wilitools import Floor, create_default_area
+    <pre><code class="language-python">from wilitools import Floor, create_default_area
 
 floor = Floor(-5.0, 5.0, -5.0, 5.0)
 area = create_default_area(floor, sample_num=10)
 
 print(area)
-</code></pre></div>
+</code></pre>
 
     <h4>実行結果</h4>
-    <div><pre><code>name       : None
+    <pre><code class="language-none">name       : None
 floor      : (-5.0 5.0 -5.0 5.0)
 motion_num : 4
 init_prob  : [0.25 0.25 0.25 0.25]
@@ -90,6 +93,6 @@ covars : [[1. 0. 1.]
           [1. 0. 1.]
           [1. 0. 1.]]
 sample_num : 10
-</code></pre></div>
+</code></pre>
 
 </body>
