@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 
-<header>
-    <link rel="stylesheet" href="../../other/style.css">
-    <link rel="stylesheet" href="../../other/prism.css">
-</header>
+<html lang="ja">
+    <head>
+        <title>Floor.get_lattice｜wilitools</title>
+        <link rel="stylesheet" href="../../other/style.css">
+        <link rel="stylesheet" href="../../other/prism.css">
+    </head>
 
-<body>
-    <script src="../../other/prism.js"></script>
+    <body>
+        <script src="../../other/prism.js"></script>
 
-    <a href="../../index.html">トップ</a><span class="breadspan">></span>
-    <a href="../index.html">リファレンス</a><span class="breadspan">></span>
-    <a href="../floor.html">Floor</a><span class="breadspan">></span>
-    get_lattice
+        <header>
+            <a href="../../index.html">トップ</a><span class="breadspan">></span>
+            <a href="../index.html">リファレンス</a><span class="breadspan">></span>
+            <a href="../floor.html">Floor</a><span class="breadspan">></span>
+            get_lattice
+            <hr>
+        </header>
 
-    <hr>
+        <main>
+            <h1>Floor.get_lattice</h1>
+            <a class="funcdef">
+                get_lattice(<br>
+                <span style="margin-left: 2rem;">delta:float</span><br>
+                )<span style="margin: 0rem 0.5rem;">-></span>numpy.ndarray
+            </a>
 
-    <h1>Floor.get_lattice</h1>
-    <a class="funcdef">
-        get_lattice(<br>
-        <span style="margin-left: 2rem;">delta:float</span><br>
-        )<span style="margin: 0rem 0.5rem;">-></span>numpy.ndarray
-    </a>
+            <h2>概要</h2>
+            捜索範囲内の格子点を取得します。<br>
+            格子点同士の間隔は引数deltaで指定します。
 
+            <h2>引数</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>型</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>delta</td>
+                        <td>float</td>
+                        <td>格子点同士の間隔</td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <h2>概要</h2>
-    捜索範囲内の格子点を取得します。<br>
-    格子点同士の間隔は引数deltaで指定します。
+            <h2>戻り値</h2>
+            <b>型</b>：numpy.ndarray<br>
+            <b>概要</b>：<br>
+            3次元配列を返します。1番目の添字は格子点が左から何番目か、2番目の添字は格子点が上から何番目か、3番目の添字は0ならば格子点のx成分を、1ならばy成分を表します。
 
-
-    <h2>引数</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>名称</th>
-                <th>型</th>
-                <th>概要</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>delta</td>
-                <td>float</td>
-                <td>格子点同士の間隔</td>
-            </tr>
-        </tbody>
-    </table>
-
-
-    <h2>戻り値</h2>
-    <b>型</b>：numpy.ndarray<br>
-    <b>概要</b>：<br>
-    3次元配列を返します。1番目の添字は格子点が左から何番目か、2番目の添字は格子点が上から何番目か、3番目の添字は0ならば格子点のx成分を、1ならばy成分を表します。
-
-
-    <h2>使用例</h2>
-    格子点をMatplot1ibを用いて可視化するスクリプトです。
-    <pre><code class="language-python">from wilitools import Floor
+            <h2>使用例</h2>
+            格子点をMatplot1ibを用いて可視化するスクリプトです。
+            <pre><code class="language-python">from wilitools import Floor
 import matplotlib.pyplot as plt
     
 floor = Floor(-2.0, 2.0, -1.5, 1.5)
@@ -66,8 +66,9 @@ for r in range(lat.shape[0]):
     for c in range(lat.shape[1]):
         plt.scatter(lat[r,c,0], lat[r,c,1], color='black')
 plt.show()</code></pre>
-
-    <h4>出力画像</h4>
-    <img class="fig" src="../../img/floor_get_lattice_sample.jpeg" alt="使用例 実行結果">
-
-</body>
+        
+            <h4>出力画像</h4>
+            <img class="fig" src="../../img/floor_get_lattice_sample.jpeg" alt="使用例 実行結果">
+        </main>
+    </body>
+</html>

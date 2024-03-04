@@ -1,106 +1,72 @@
 <!DOCTYPE html>
 
-<header>
-    <link rel="stylesheet" href="../other/style.css">
-</header>
+<html lang="ja">
+    <head>
+        <title>リファレンス｜wilitools</title>
+        <link rel="stylesheet" href="../other/style.css">
+    </head>
 
-<body>
+    <body>
+        <header>
+            <a href="../index.html">トップ</a><span class="breadspan">></span>
+            リファレンス
+            <hr>
+        </header>
 
-    <h1>リファレンス</h1>
+        <main>
+            <h2>クラス</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="./area.html">Area</a></td>
+                        <td>捜索範囲、遷移確率、初期動作確率、遷移失敗確率、利用者位置分布をまとめたクラス</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./floor.html">Floor</a></td>
+                        <td>捜索範囲</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./gaussian.html">Gaussian</a></td>
+                        <td>混合ガウス分布の計算用</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./suggester.html">Suggester</a></td>
+                        <td>なくしもの位置の推定、遷移失敗確率の更新用</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./wilidb.html">wiliDB</a></td>
+                        <td>データベースによる各種パラメータ（捜索範囲や遷移確率など）の管理用</td>
+                    </tr>
+                </tbody>
+            </table>
 
-
-    <h2>クラス</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    名称
-                </th>
-                <th>
-                    概要
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <a href="./area.html">Area</a>
-                </td>
-                <td>
-                    捜索範囲、遷移確率、初期動作確率、遷移失敗確率、利用者位置分布をまとめたクラス
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./floor.html">Floor</a>
-                </td>
-                <td>
-                    捜索範囲
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./gaussian.html">Gaussian</a>
-                </td>
-                <td>
-                    混合ガウス分布の計算用
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./suggester.html">Suggester</a>
-                </td>
-                <td>
-                    なくしもの位置の推定、遷移失敗確率の更新用
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./wilidb.html">wiliDB</a>
-                </td>
-                <td>
-                    データベースによる各種パラメータ（捜索範囲や遷移確率など）の管理用
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-
-    <h2>関数</h2>
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                    <a href="./create_default_area.html">create_default_area</a>
-                </td>
-                <td>
-                    最小限のパラメータからAreaクラスのインスタンスを作成
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./json_to_area.html">json_to_area</a>
-                </td>
-                <td>
-                    JSON形式のファイルからAreaクラスのインスタンスを作成
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./area_to_json.html">area_to_json</a>
-                </td>
-                <td>
-                    AreaクラスのインスタンスをJSON形式のファイルに書き出し
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./area_to_suggester.html">area_to_suggester</a>
-                </td>
-                <td>
-                    AreaクラスのインスタンスからSuggesterクラスのインスタンスを作成
-                </td>
-            </tr>
-            </tbody>
-    </table>
-</body>
+            <h2>関数</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <td><a href="./create_default_area.html">create_default_area</a></td>
+                        <td>最小限のパラメータからAreaクラスのインスタンスを作成</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./json_to_area.html">json_to_area</a></td>
+                        <td>JSON形式のファイルからAreaクラスのインスタンスを作成</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./area_to_json.html">area_to_json</a></td>
+                        <td>AreaクラスのインスタンスをJSON形式のファイルに書き出し</td>
+                    </tr>
+                    <tr>
+                        <td><a href="./area_to_suggester.html">area_to_suggester</a></td>
+                        <td>AreaクラスのインスタンスからSuggesterクラスのインスタンスを作成</td>
+                    </tr>
+                    </tbody>
+            </table>
+        </main>
+    </body>
+</html>
