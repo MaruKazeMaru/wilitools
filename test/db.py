@@ -5,7 +5,8 @@
 
 import os
 import numpy as np
-from wilitools import wiliDB, create_default_area, Floor
+from wilitools import create_default_area, Floor
+from wilitools.db import wiliDB
 
 def test_db():
     db_path = os.path.join(os.path.dirname(__file__), "db.sqlite3")

@@ -5,8 +5,8 @@ import numpy as np
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker, Session
 
-from ._gaussian import Gaussian
-from ._area import Area
+from .._gaussian import Gaussian
+from .._area import Area
 from ._models import Base, AreaModel, MotionModel, InitProbModel, TrProbModel, SampleModel, MissProbModel
 
 class wiliDB:
