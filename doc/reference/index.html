@@ -14,6 +14,35 @@
         </header>
 
         <main>
+            <h1>モジュール</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#module-main">wilitools</a></td>
+                        <td>なくしもの位置の推定、遷移失敗確率の更新、推定の補助</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#module-db">wilitools.db</a></td>
+                        <td>各種パラメータ（捜索範囲、遷移確率等）のデータベースによる管理</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr style="margin-top: 1rem;">
+
+            <h1 id="module-main">wilitools</h1>
+            <h4>概要</h4>
+            なくしもの位置の推定と遷移失敗確率の更新のためのクラス、ならびに推定を補助するクラスや関数を含むモジュールです。
+
+            <h4>依存パッケージ</h4>
+            NumPy
+
             <h2>クラス</h2>
             <table>
                 <thead>
@@ -39,15 +68,17 @@
                         <td><a href="./suggester.html">Suggester</a></td>
                         <td>なくしもの位置の推定、遷移失敗確率の更新用</td>
                     </tr>
-                    <tr>
-                        <td><a href="./wilidb.html">wiliDB</a></td>
-                        <td>データベースによる各種パラメータ（捜索範囲や遷移確率など）の管理用</td>
-                    </tr>
                 </tbody>
             </table>
 
             <h2>関数</h2>
             <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <td><a href="./create_default_area.html">create_default_area</a></td>
@@ -66,6 +97,47 @@
                         <td>AreaクラスのインスタンスからSuggesterクラスのインスタンスを作成</td>
                     </tr>
                     </tbody>
+            </table>
+
+            <hr style="margin-top: 1rem;">
+
+            <h1 id="module-db">wilitools.db</h1>
+            <h4>概要</h4>
+            推定に用いるパラメータ（捜索範囲、遷移確率、初期動作確率、利用者位置分布、遷移失敗確率）をデータベースで管理するためのクラスを含むサブモジュールです。
+
+            <h4>依存パッケージ</h4>
+            NumPy,SQLAlchemy
+
+            <h2>クラス</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="./wilidb.html">wiliDB</a></td>
+                        <td>データベースによる各種パラメータ（捜索範囲や遷移確率など）の管理用</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>関数</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>概要</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
             </table>
         </main>
     </body>
