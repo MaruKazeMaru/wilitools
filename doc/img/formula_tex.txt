@@ -1,0 +1,8 @@
+Eh.png
+\mathrm{E}_{\bm{\theta}}[h(\bm{x})]
+Eh2.png
+\mathrm{E}_{\bm{\theta}}[h(\bm{x})] = \int h(\bm{x} | \bm{\theta}) f(\bm{\theta}) \mathrm{d} \bm{\theta}
+intf.png
+\int \phi(\bm{\theta}) \mathrm{d} \bm{\theta} \approx \frac{1}{m} \sum_{i=1}^{m} \phi(\bm{\theta}_i)
+intf2.png
+\int h(\bm{x} | \bm{\theta}) f(\bm{\theta}) \mathrm{d} \bm{\theta} \approx \frac{1}{m} \sum_{i=1}^{m} h(\bm{x}|\bm{\theta}_i) f(\bm{\theta}_i)
