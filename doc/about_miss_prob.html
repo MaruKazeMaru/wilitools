@@ -2,7 +2,7 @@
 
 <html lang="ja">
     <head>
-        <title>遷移失敗確率の学習の実装｜wilitools</title>
+        <title>遷移失敗確率の実装｜wilitools</title>
         <link rel="stylesheet" href="./other/style.css">
     </head>
 
@@ -17,21 +17,27 @@
             遷移失敗確率が関わる計算をどのように実装しているかについて述べます。
 
             <h2>数学的背景</h2>
-            なくしもの位置の推定と遷移失敗確率の学習では次の積分値を計算する必要があります。<br>
+            　なくしもの位置の推定と遷移失敗確率の学習では次の積分値を計算する必要があります。<br>
             <img src="./img/Eh2.png"><br>
-            この値を解析的に求めることは困難であるため近似計算を行います。<br>
+            この値を解析的に求めることは困難なので近似計算を行います。<br>
             <br>
-            まず[0,1]<sup>n</sup>上の関数&phi;の積分&int;&phi;(&theta;)d&theta;は、[0,1]<sup>n</sup>上の一様分布に従う十分多くの乱数&theta;<sub>i</sub>(i=1,2,...,m)を用いて次のように近似できます。<br>
+            　まず[0,1]<sup>n</sup>上の関数&phi;の積分&int;&phi;(&theta;)d&theta;は、[0,1]<sup>n</sup>上の一様分布に従う十分多くの乱数&theta;<sub>i</sub>(i=1,2,...,m)を用いて次のように近似できます。<br>
             <img src="./img/intf.png"><br>
             （言い換えれば、十分たくさんのサンプルについて平均をとると真の平均に近い値になります。）<br>
             ここで&phi;は任意の関数なのでなくしもの位置分布の確率密度関数h(x|&theta;)、遷移失敗確率の確率密度関数fを用いて&phi;(&theta;)=h(x|&theta;)f(&theta;)と置き換えると次のようになります。<br>
             <img src="./img/intf2.png"><br>
+            さらにhは各動作毎の利用者位置分布の密度関数b<sub>i</sub>となくしもの発生確率p<sub>i</sub>を用いてh=p&dot;bと書けます。
             この式の左辺は<img src="./img/Eh.png" alt="関数&phi;（ファイ）の遷移失敗確率に関する期待値">そのものです。
             なので<img src="./img/Eh.png" alt="関数&phi;（ファイ）の遷移失敗確率に関する期待値">の値は&theta;<sub>i</sub>、h(x|&theta;<sub>i</sub>)、f(&theta;<sub>i</sub>)という3種類の値を用いて近似できます。<br>
-            さらに任意の&theta;&isin;[0,1]<sup>n</sup>に対しh(x|&theta;)は&theta;から（遷移確率と利用者位置分布を用いて）直接計算できるので、本質的に&theta;<sub>i</sub>とf(&theta;<sub>i</sub>)の2種類の値だけで済みます。
+            さらに任意の&theta;&isin;[0,1]<sup>n</sup>に対しh(x|&theta;)は&theta;から（遷移確率と利用者位置分布を用いて）簡単に計算できるので、本質的に&theta;<sub>i</sub>とf(&theta;<sub>i</sub>)の2種類の値だけで済みます。
 
             <h2>実装</h2>
-            上記の背景から必要な変数は&theta;<sub>i</sub>を格納する2次元配列とf(&theta;<sub>i</sub>)を格納する1次元配列の2つです。
+            <h3>1：&theta;<sub>i</sub>とf(&theta;<sub>i</sub>)の型</h3>
+            　上記の背景から遷移失敗確率に関して必要な変数は&theta;<sub>i</sub>を格納する2次元配列とf(&theta;<sub>i</sub>)を格納する1次元配列の2つです。
+            そこで本パッケージでは&theta;<sub>i</sub>を2次元のnumpy.ndarray型の変数として、またf(&theta;<sub>i</sub>)を1次元のnumpy.ndarray型の変数として扱います。
+            <h3>2：h(x|&theta;)の実装</h3>
+            h(x|&theta;<sub>i</sub>)はなくしもの発生確率を重みとした利用者位置分布（2変数正規分布）の和です。
+            そこでまずSuggesterクラスに引数としてxと&theta;<sub>i</sub>をとり、戻り値としてなくしものとなくしもの発生確率を返すようなメンバ関数_weightを用意します。また2次元混合正規分布は戻り値を
         </main>
     </body>
 </html>
