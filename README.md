@@ -1,23 +1,44 @@
 # wilitools
+![test](https://github.com/MaruKazeMaru/wilitools/actions/workflows/python-package.yml/badge.svg)
 ## 概要
-WiLIのなくしもの位置推定、遷移失敗確率の更新、各種パラメータのDBへの保存を行うPythonパッケージです。<br>
-WiLIとはなくしもの位置推定用のプログラム群です。詳細は近日中に[wili_documents](https://github.com/MaruKazeMaru/wili_documents)に書きます。
+なくしもの位置推定や推定に用いるパラメータの管理等の機能を提供するPythonパッケージです。<br>
+本パッケージはなくしもの位置推定用のプログラム群であるWiLIの一部です。WiLIについての詳細は[wili_documents](https://github.com/MaruKazeMaru/wili_documents)をご参照ください。
 
 
 ## 依存
-### Pythonパッケージ
 * NumPy
+  * 修正BSDライセンス
+* SQLAlchemy
+  * MITライセンス
+* pytest
+  * テスト時のみ
+  * MITライセンス
 
-### その他
-* SQLite3
+
+## テスト環境
+||バージョン|
+|:-|:-|
+|Ubuntu|latest|
+|Python|3.9 ~ 3.11|
+|NumPy|latest|
+|SQLAlchemy|latest|
+
+（注）latestはGitHub Actionsによるテストを行った時点（＝最後にmainブランチにpushした時点）での最新のバージョンという意味です。
+
+
+## インストール
+リポジトリ直下のディレクトリで下記のコマンドを実行してください。
+```bash
+pip install .
+```
 
 
 ## 推定と遷移失敗確率の更新
-どちらも[suggester.py](./src/wilitools/suggester.py)で定義されたSuggesterクラスを用います。
+どちらもSuggesterクラスを用います。
 
 
 ## DB操作
-[db.py](./src/wilitools/db.py)で定義されたWiliDBクラスを用います。
+wiliDBクラスを用います。
 
 
 ## ライセンス
