@@ -22,7 +22,7 @@ def _dict_to_area(data:dict) -> Area:
         float(data['y_min']), float(data['y_max'])
     )
 
-    init_prob = np.array(data['init_prob'], dtype=np.float32)
+    start_prob = np.array(data['start_prob'], dtype=np.float32)
     tr_prob = np.array(data['tr_prob'], dtype=np.float32)
     avrs = np.array(data['avrs'], dtype=np.float32)
     covars = np.array(data['covars'], dtype=np.float32)
@@ -36,13 +36,13 @@ def _dict_to_area(data:dict) -> Area:
             sample_num = int(data['sample_num'])
         else:
             sample_num = 300
-        motion_num = init_prob.shape[0]
+        motion_num = start_prob.shape[0]
         miss_probs = uniform_cube(motion_num, size=sample_num)
         dens_miss_probs = np.ones(sample_num, dtype=np.float32)
 
     return Area(
         floor,
-        init_prob, tr_prob, gaussian,
+        start_prob, tr_prob, gaussian,
         miss_probs, dens_miss_probs,
         **kwargs
     )
@@ -53,7 +53,7 @@ def _area_to_dict(area:Area, miss_probs_in:bool=False):
     if area.name:
         data['name'] = area.name
     data['motion_num'] = area.motion_num
-    data['init_prob'] = area.init_prob.tolist()
+    data['start_prob'] = area.start_prob.tolist()
     data['tr_prob'] = area.tr_prob.tolist()
     data['avrs']   = area.gaussian.avrs.tolist()
     data['covars'] = area.gaussian.covars.tolist()
@@ -80,6 +80,6 @@ def area_to_json(json_path:str, area:Area, miss_probs_in:bool=False, json_dump_k
 
 def area_to_suggester(area:Area) -> Suggester:
     return Suggester(
-        area.init_prob, area.tr_prob, area.gaussian,
+        area.start_prob, area.tr_prob, area.gaussian,
         area.miss_probs, area.dens_miss_probs
     )

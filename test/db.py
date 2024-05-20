@@ -19,22 +19,22 @@ def test_db():
 
     area_id = db.create_area(area)
 
-    area.init_prob[0] = 0
+    area.start_prob[0] = 0
     area.tr_prob[0,0] = 0
     area.gaussian.avrs[0,0] = 0
     area.gaussian.covars[0,0] = 0
     area.miss_probs[0,0] = 0
     area.dens_miss_probs[0] = 0
 
-    db.update_init_prob(area_id, area.init_prob)
+    db.update_start_prob(area_id, area.start_prob)
     db.update_tr_prob(area_id, area.tr_prob)
     db.update_gaussian(area_id, area.gaussian)
     db.update_samples(area_id, area.miss_probs, area.dens_miss_probs)
     db.update_dens(area_id, area.dens_miss_probs)
 
-    record = db.read_init_prob(area_id)
-    assert record.shape == area.init_prob.shape
-    assert np.allclose(record, area.init_prob)
+    record = db.read_start_prob(area_id)
+    assert record.shape == area.start_prob.shape
+    assert np.allclose(record, area.start_prob)
 
     record = db.read_tr_prob(area_id)
     assert record.shape == area.tr_prob.shape

@@ -10,12 +10,12 @@ from ._rand import uniform_cube
 
 class Suggester:
     def __init__(self,
-        init_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
+        start_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
         miss_probs:np.ndarray, dens_miss_probs:np.ndarray
     ):
         # validate
-        if len(init_prob.shape) != 1:
-            raise ValueError('init_prob is not vector. its shape is {}'.format(init_prob.shape))
+        if len(start_prob.shape) != 1:
+            raise ValueError('init_prob is not vector. its shape is {}'.format(start_prob.shape))
         if len(tr_prob.shape) != 2:
             raise ValueError('tr_prob is not matrix. its shape is {}'.format(tr_prob.shape))
         if len(miss_probs.shape) != 2:
@@ -23,10 +23,10 @@ class Suggester:
         if len(dens_miss_probs.shape) != 1:
             raise ValueError('dens_miss_probs is not 1d array. its shape is {}'.format(dens_miss_probs.shape))
         if not (
-            init_prob.shape[0] == tr_prob.shape[0] and \
-            init_prob.shape[0] == tr_prob.shape[1] and \
-            init_prob.shape[0] == gaussian.avrs.shape[0] and \
-            init_prob.shape[0] == miss_probs.shape[1]
+            start_prob.shape[0] == tr_prob.shape[0] and \
+            start_prob.shape[0] == tr_prob.shape[1] and \
+            start_prob.shape[0] == gaussian.avrs.shape[0] and \
+            start_prob.shape[0] == miss_probs.shape[1]
         ):
             raise ValueError('can\'t define motion_num')
         if not (miss_probs.shape[0] == dens_miss_probs.shape[0]):
@@ -34,10 +34,10 @@ class Suggester:
 
         # ~~~ HMM ~~~
         # node
-        self.motion_num = init_prob.shape[0]
+        self.motion_num = start_prob.shape[0]
 
         # initial motion probability
-        self.init_prob = init_prob.astype(np.float32)
+        self.start_prob = start_prob.astype(np.float32)
 
         # transition probability
         self.tr_prob = tr_prob.astype(np.float32)
@@ -57,7 +57,7 @@ class Suggester:
         L = miss_prob.reshape((self.motion_num, 1)) * self.tr_prob.T
         L[np.diag_indices(self.motion_num)] = np.zeros(self.motion_num, dtype=np.float32)
         K = self.tr_prob.T - L
-        return L @ np.linalg.inv(np.identity(self.motion_num, dtype=np.float32) - K) @ self.init_prob
+        return L @ np.linalg.inv(np.identity(self.motion_num, dtype=np.float32) - K) @ self.start_prob
 
 
     def _liklyhood(self, x:np.ndarray, miss_prob:np.ndarray) -> float:

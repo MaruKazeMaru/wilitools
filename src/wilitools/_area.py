@@ -10,7 +10,7 @@ from ._rand import uniform_cube
 class Area:
     def __init__(
         self, floor:Floor,
-        init_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
+        start_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
         miss_probs:np.ndarray, dens_miss_probs:np.ndarray,
         name:str=None
     ):
@@ -19,8 +19,8 @@ class Area:
         self.floor = floor
 
         # hmm parameters
-        self.motion_num = init_prob.shape[0]
-        self.init_prob = init_prob
+        self.motion_num = start_prob.shape[0]
+        self.start_prob = start_prob
         self.tr_prob = tr_prob
         self.gaussian = gaussian
 
@@ -38,7 +38,7 @@ class Area:
         s = 'name       : %s\n' % self.name \
           + 'floor      : {}\n'.format(self.floor) \
           + 'motion_num : %d\n' % self.motion_num \
-          + 'init_prob  : {}\n'.format(self.init_prob) \
+          + 'start_prob : {}\n'.format(self.start_prob) \
           + 'tr_prob    : ' + s_t.replace('\n', '\n' + h) + '\n' \
           + 'gaussian   : \n' + s_g + '\n' \
           + 'sample_num : %d' % self.sample_size
