@@ -10,7 +10,7 @@ from ._rand import uniform_cube
 class Area:
     def __init__(
         self, floor:Floor,
-        init_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
+        start_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
         miss_probs:np.ndarray, dens_miss_probs:np.ndarray,
         name:str=None
     ):
@@ -19,8 +19,8 @@ class Area:
         self.floor = floor
 
         # hmm parameters
-        self.motion_num = init_prob.shape[0]
-        self.init_prob = init_prob
+        self.motion_num = start_prob.shape[0]
+        self.start_prob = start_prob
         self.tr_prob = tr_prob
         self.gaussian = gaussian
 
@@ -34,20 +34,20 @@ class Area:
         s_g = self.gaussian.__str__()
         s_t = self.tr_prob.__str__()
 
-        h = '              '
-        s = 'name        : %s\n' % self.name \
-          + 'floorsize   : {}\n'.format(self.floor) \
-          + 'motion_num  : %d\n' % self.motion_num \
-          + 'init_prob   : {}\n'.format(self.init_prob) \
-          + 'tr_prob     : ' + s_t.replace('\n', '\n' + h) + '\n' \
-          + 'gaussian    : \n' + s_g + '\n' \
-          + 'sample_size : %d' % self.sample_size
+        h = '             '
+        s = 'name       : %s\n' % self.name \
+          + 'floor      : {}\n'.format(self.floor) \
+          + 'motion_num : %d\n' % self.motion_num \
+          + 'start_prob : {}\n'.format(self.start_prob) \
+          + 'tr_prob    : ' + s_t.replace('\n', '\n' + h) + '\n' \
+          + 'gaussian   : \n' + s_g + '\n' \
+          + 'sample_num : %d' % self.sample_size
         return s
 
 
-def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Area:
+def create_default_area(floor:Floor, name:str = None, sample_num:int=300) -> Area:
     # hmm parameters
-    _a = floor.lattice_from_delta(4)
+    _a = floor.get_lattice(4)
     avrs = _a.reshape((_a.shape[0] * _a.shape[1], 2))
 
     n = avrs.shape[0]
@@ -59,8 +59,8 @@ def create_default_area(floor:Floor, name:str = None, sample_size:int=300) -> Ar
     covars[:,1] = np.zeros((n,), dtype=np.float32)
 
     # transition miss prob
-    miss_probs = uniform_cube(n, sample_size)
-    dens_miss_probs = np.ones((sample_size,), dtype=np.float32)
+    miss_probs = uniform_cube(n, sample_num)
+    dens_miss_probs = np.ones((sample_num,), dtype=np.float32)
 
     return Area(
         floor,

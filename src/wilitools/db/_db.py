@@ -5,9 +5,9 @@ import numpy as np
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker, Session
 
-from ._gaussian import Gaussian
-from ._area import Area
-from wilitools._models import Base, AreaModel, MotionModel, InitProbModel, TrProbModel, SampleModel, MissProbModel
+from .._gaussian import Gaussian
+from .._area import Area
+from ._models import Base, AreaModel, MotionModel, InitProbModel, TrProbModel, SampleModel, MissProbModel
 
 class wiliDB:
     def __init__(self, db_path:str):
@@ -35,7 +35,7 @@ class wiliDB:
             motion_id = self.create_motion(area_id, area.gaussian.avrs[i], area.gaussian.covars[i])
             motion_ids.append(motion_id)
 
-        self.create_init_prob(motion_ids, area.init_prob)
+        self.create_start_prob(motion_ids, area.start_prob)
         self.create_tr_prob(motion_ids, area.tr_prob)
         self.create_samples(area_id, motion_ids, area.miss_probs, area.dens_miss_probs)
 
@@ -62,7 +62,7 @@ class wiliDB:
         return motion_id
 
 
-    def create_init_prob(self, motion_ids:list[int], init_prob:np.ndarray):
+    def create_start_prob(self, motion_ids:list[int], init_prob:np.ndarray):
         models = []
         for i in range(init_prob.shape[0]):
             init_prob_model = InitProbModel()
@@ -124,7 +124,7 @@ class wiliDB:
         session.close()
 
 
-    def _select_init_prob(self, session:Session, area_id:int):
+    def _select_start_prob(self, session:Session, area_id:int):
         return session.query(InitProbModel, MotionModel)\
             .outerjoin(MotionModel, InitProbModel.motion == MotionModel.id)\
             .filter(MotionModel.area == area_id)\
@@ -157,13 +157,13 @@ class wiliDB:
             .all()
 
 
-    def read_init_prob(self, area_id:int) -> np.ndarray:
+    def read_start_prob(self, area_id:int) -> np.ndarray:
         session = (sessionmaker(self.engine))()
-        query_res = self._select_init_prob(session, area_id)
-        init_prob = [r[0].data for r in query_res]
+        query_res = self._select_start_prob(session, area_id)
+        start_prob = [r[0].data for r in query_res]
         session.close()
-        init_prob = np.array(init_prob, dtype=np.float32)
-        return init_prob
+        start_prob = np.array(start_prob, dtype=np.float32)
+        return start_prob
 
 
     def read_tr_prob(self, area_id:int) -> np.ndarray:
@@ -205,11 +205,11 @@ class wiliDB:
         return (miss_probs, densitys)
 
 
-    def update_init_prob(self, area_id:int, init_prob:np.ndarray):
+    def update_start_prob(self, area_id:int, start_prob:np.ndarray):
         session = (sessionmaker(self.engine))()
-        query_res = self._select_init_prob(session, area_id)
+        query_res = self._select_start_prob(session, area_id)
         for i, r in enumerate(query_res):
-            r[0].data = init_prob[i]
+            r[0].data = start_prob[i]
         session.commit()
         session.close()
 
@@ -248,6 +248,17 @@ class wiliDB:
         query_res = self._select_miss_probs(session, area_id)
         for i, r in enumerate(query_res):
             r[0].data = miss_probs_flat[i]
+
+        session.commit()
+        session.close()
+
+
+    def update_dens(self, area_id:int, dens_miss_probs:np.ndarray):
+        session = (sessionmaker(self.engine))()
+
+        query_res = self._select_samples(session, area_id)
+        for i, r in enumerate(query_res):
+            r.dens = dens_miss_probs[i]
 
         session.commit()
         session.close()

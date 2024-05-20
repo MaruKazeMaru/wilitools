@@ -3,12 +3,15 @@
 
 import numpy as np
 
-from ._exceptions import NegativeFloor
-
 class Floor:
     def __init__(self, x_min:float, x_max:float, y_min:float, y_max:float):
-        if x_min > x_max or y_min > y_max:
-            raise NegativeFloor(x_min, x_max, y_min, y_max)
+        err_msgs = []
+        if x_min > x_max:
+            err_msgs.append('x_min > x_max ( x_min={}, x_max={})'.format(x_min, x_max))
+        if y_min > y_max:
+            err_msgs.append('y_min > y_max ( y_min={}, y_max={})'.format(y_min, y_max))
+        if len(err_msgs) > 0:
+            raise ValueError(', '.join(err_msgs))
         
         self.x_min = float(x_min)
         self.x_max = float(x_max)
@@ -20,7 +23,7 @@ class Floor:
         return '({} {} {} {})'.format(self.x_min, self.x_max, self.y_min, self.y_max)
 
 
-    def lattice_from_delta(self, delta:float) -> np.ndarray:
+    def get_lattice(self, delta:float) -> np.ndarray:
         nx = (self.x_max - self.x_min) / delta
         nx = max(1, int(np.round(nx)))
 

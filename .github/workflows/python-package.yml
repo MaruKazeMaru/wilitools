@@ -40,7 +40,6 @@ jobs:
         pip install .
     - name: Test with pytest
       run: |
-        python3 -m pytest test/exceptions.py
         python3 -m pytest test/floor.py
         python3 -m pytest test/rand.py
         python3 -m pytest test/area.py
