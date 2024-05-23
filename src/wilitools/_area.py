@@ -8,6 +8,38 @@ from ._gaussian import Gaussian
 from ._rand import uniform_cube
 
 class Area:
+    """推定に必要なパラメータをまとめたクラス
+    推定に必要なパラメータ5種（捜索範囲、初期動作確率、遷移確率、利用者位置分布、遷移失敗確率）をまとめたクラス
+
+    Attributes
+    ----------
+    name : str | None
+        name (optional)
+    floor : Floor
+        捜索範囲
+    motion_num : int
+        動作の数
+    start_prob : numpy.ndarray
+        初期動作確率を並べた1次元のnumpy配列
+        （初期動作確率：各動作について利用者の最初の動作がその動作である確率）
+    tr_prob : numpy.ndarray
+        遷移確率を並べた2次元のnumpy配列
+    gaussian : Gaussian
+        各動作の利用者位置分布
+    sample_size : int
+        遷移失敗確率の分布は[0,1]^n上のサンプリング点と
+        各点の密度関数の値で表される
+        この変数はサンプリング点の個数
+    miss_probs : numpy.ndarray
+        サンプリング点を並べた2次元配列
+        行数（1次元目の要素数）はsample_size
+        列数（2次元目の要素数）はmotion_num
+        i行j列目の要素はi番目のサンプリング点におけるj番目の動作の遷移失敗確率
+    dens_miss_probs : numpy.ndarray
+        サンプリング点の密度関数の値を並べた1次元のnumpy配列
+        要素数はsample_size
+        i番目の要素はi番目のサンプリング点における密度関数の値
+    """
     def __init__(
         self, floor:Floor,
         start_prob:np.ndarray, tr_prob:np.ndarray, gaussian:Gaussian,
@@ -46,6 +78,24 @@ class Area:
 
 
 def create_default_area(floor:Floor, name:str = None, sample_num:int=300) -> Area:
+    """デフォルト値のAreaインスタンスを作成
+    デフォルト値のAreaインスタンスを作成
+    捜索範囲だけは指定する必要がある
+
+    Parameters
+    ----------
+    floor : Floor
+        捜索範囲
+    name : str, default None
+        name (optional)
+    sample_num : int, default 300
+        遷移失敗確率の分布を表すサンプリング点の個数
+
+    Returns
+    -------
+    default_area : Area
+        デフォルト値のAreaインスタンス
+    """
     # hmm parameters
     _a = floor.get_lattice(4)
     avrs = _a.reshape((_a.shape[0] * _a.shape[1], 2))

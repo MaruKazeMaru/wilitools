@@ -67,18 +67,58 @@ def _area_to_dict(area:Area, miss_probs_in:bool=False):
 
 
 def json_to_area(json_path:str) -> Area:
+    """jsonファイルからAreaインスタンスを読み出す
+    Parameters
+    ----------
+    json_path : str
+        読み込むjsonファイルのパス
+    """
     with open(json_path) as f:
         data = json.load(f)
     return _dict_to_area(data)
 
 
 def area_to_json(json_path:str, area:Area, miss_probs_in:bool=False, json_dump_kwargs:dict={}):
+    """Areaインスタンスをjsonファイルに書き出す
+
+    Parameters
+    ----------
+    json_path : str
+        書き出し先のjsonファイルのパス
+    area : Area
+        書き出すAreaインスタンス
+    miss_probs_in : bool, default False
+        遷移失敗確率の分布を表すサンプリング点を書き出すか
+        Trueにすると各点の遷移失敗確率と密度関数の値が書き出される
+        書き出す場合、サンプリング点が極端に多いとファイルサイズが肥大化する恐れがある
+    json_dump_kwargs : dict
+        書き出すjsonの形式
+        https://docs.python.org/ja/3/library/json.html#json.dump を参考のこと
+    """
     with open(json_path, mode='w') as f:
         data = _area_to_dict(area, miss_probs_in=miss_probs_in)
         json.dump(data, f, **json_dump_kwargs)
 
 
 def area_to_suggester(area:Area) -> Suggester:
+    """AreaインスタンスをSuggesterインスタンスに変換
+
+    Parameters
+    ----------
+    area : Area
+        変換するAreaインスタンス
+
+    Returns
+    -------
+    suggester : Suggester
+        変換されたSuggesterインスタンス
+
+    Raises
+    ------
+    ValueError
+        Areaインスタンスのメンバ変数間に齟齬がある場合
+        例えば初期動作確率ベクトルの要素数と遷移確率行列の行数が一致しない場合など
+    """
     return Suggester(
         area.start_prob, area.tr_prob, area.gaussian,
         area.miss_probs, area.dens_miss_probs
